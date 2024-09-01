@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'flex-start',
     borderRadius: 10,
-    // padding: 10,
     gap: 10,
   },
   avatar: {

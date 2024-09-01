@@ -1,3 +1,5 @@
+import { Competition } from '@/interfaces/competition'
+import { Team } from '@/interfaces/team'
 import { User } from '@/interfaces/user'
 import api from '@/services/api'
 import { PropsWithChildren, createContext, useEffect, useState } from 'react'
@@ -6,14 +8,29 @@ interface UserResponse extends User {
   photo_url: string
 }
 
+interface DashBoardByYearResponse {
+  year: string
+  attributs: {
+    matches: number
+    scores: number
+    assists: number
+    teams: Team[]
+    competitions: Competition[]
+  }
+}
+
 interface UserContextType {
   user: UserResponse | null
   getUser: () => void
+  dashboardByYear: DashBoardByYearResponse | null
+  getDashboardByYear: () => void
 }
 
 export const UserContext = createContext<UserContextType>({
   user: null,
   getUser: () => {},
+  dashboardByYear: null,
+  getDashboardByYear: () => {},
 })
 
 export default function UserProvider({ children }: PropsWithChildren) {
@@ -28,8 +45,24 @@ export default function UserProvider({ children }: PropsWithChildren) {
     }
   }
 
+  const [
+    dashboardByYear,
+    setDashboardByYear,
+  ] = useState<DashBoardByYearResponse | null>(null)
+  const getDashboardByYear = async () => {
+    try {
+      const year = new Date().getFullYear() - 1
+      const response = await api.get(`/dashboards/${year}/by_year`)
+      setDashboardByYear(response?.data)
+    } catch (error) {
+      console.error('Error fetching user:', error)
+    }
+  }
+
   return (
-    <UserContext.Provider value={{ user, getUser }}>
+    <UserContext.Provider
+      value={{ user, getUser, dashboardByYear, getDashboardByYear }}
+    >
       {children}
     </UserContext.Provider>
   )

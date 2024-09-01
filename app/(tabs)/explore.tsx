@@ -5,16 +5,24 @@ import { ThemedText } from '@/components/ThemedText'
 import { ThemedView } from '@/components/ThemedView'
 import UserHeader from '@/components/UserHeader'
 import Space from '@/components/space'
+import { UserContext } from '@/contexts/user'
 import { Ionicons } from '@expo/vector-icons'
+import { useContext, useEffect } from 'react'
 import { StyleSheet, View } from 'react-native'
 
 export default function Progress() {
+  const { dashboardByYear, getDashboardByYear } = useContext(UserContext)
+
+  useEffect(() => {
+    getDashboardByYear()
+  }, [])
+
   return (
     <PageView>
       <UserHeader />
       <Space size="lg" />
-      <BasicScrollView style={{height: '100%'}}>
-        <ThemedText type="subtitle">Meu ano de 2024</ThemedText>
+      <BasicScrollView style={{ height: '100%' }}>
+        <ThemedText type="subtitle">Meu ano de {dashboardByYear?.year}</ThemedText>
         <View style={styles.section}>
           <ThemedView style={styles.sectionContent}>
             <Info style={styles.yearDetails}>
@@ -27,7 +35,7 @@ export default function Progress() {
                 colorType="infoText"
                 style={styles.yearInfoFooter}
               >
-                15
+                {dashboardByYear?.attributs?.matches}
               </ThemedText>
             </Info>
             <Info style={styles.yearDetails}>
@@ -40,7 +48,7 @@ export default function Progress() {
                 colorType="infoText"
                 style={styles.yearInfoFooter}
               >
-                9
+                {dashboardByYear?.attributs?.scores}
               </ThemedText>
             </Info>
             <Info style={styles.yearDetails}>
@@ -53,7 +61,7 @@ export default function Progress() {
                 colorType="infoText"
                 style={styles.yearInfoFooter}
               >
-                4
+                {dashboardByYear?.attributs?.assists}
               </ThemedText>
             </Info>
           </ThemedView>
@@ -63,42 +71,26 @@ export default function Progress() {
 
         <ThemedText type="subtitle">Equipes que joguei</ThemedText>
         <View style={[styles.section, styles.competitionInfo]}>
-          <Info>
-            <ThemedText type="defaultSemiBold" colorType="infoText">
-              Ferroviário
-            </ThemedText>
-          </Info>
-          <Info>
-            <ThemedText type="defaultSemiBold" colorType="infoText">
-              Uniclinic
-            </ThemedText>
-          </Info>
-          <Info>
-            <ThemedText type="defaultSemiBold" colorType="infoText">
-              Fortaleza
-            </ThemedText>
-          </Info>
-          <Info>
-            <ThemedText type="defaultSemiBold" colorType="infoText">
-              Juniors
-            </ThemedText>
-          </Info>
+          {dashboardByYear?.attributs?.teams.map((team, index) => (
+            <Info key={index}>
+              <ThemedText type="defaultSemiBold" colorType="infoText">
+                {team.name}
+              </ThemedText>
+            </Info>
+          ))}
         </View>
 
         <Space size="lg" />
 
         <ThemedText type="subtitle">Competições</ThemedText>
         <View style={[styles.section, styles.competitionInfo]}>
-          <Info>
-            <ThemedText type="defaultSemiBold" colorType="infoText">
-              Liga LFA
-            </ThemedText>
-          </Info>
-          <Info>
-            <ThemedText type="defaultSemiBold" colorType="infoText">
-              Torneio juniores
-            </ThemedText>
-          </Info>
+          {dashboardByYear?.attributs?.competitions.map((competition, index) => (
+            <Info key={index}>
+              <ThemedText type="defaultSemiBold" colorType="infoText">
+                {competition?.name}
+              </ThemedText>
+            </Info>
+          ))}
         </View>
       </BasicScrollView>
     </PageView>
