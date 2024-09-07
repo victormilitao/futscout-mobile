@@ -1,29 +1,36 @@
-import type { PropsWithChildren, ReactElement } from 'react';
-import { StyleSheet, useColorScheme } from 'react-native';
+import type { PropsWithChildren, ReactElement } from 'react'
+import {
+  Image,
+  ImageSourcePropType,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native'
 import Animated, {
   interpolate,
   useAnimatedRef,
   useAnimatedStyle,
   useScrollViewOffset,
-} from 'react-native-reanimated';
+} from 'react-native-reanimated'
 
-import { ThemedView } from '@/components/ThemedView';
+import { ThemedView } from '@/components/ThemedView'
+import { PageView } from './PageView'
 
-const HEADER_HEIGHT = 250;
+const HEADER_HEIGHT = 300
 
 type Props = PropsWithChildren<{
-  headerImage: ReactElement;
-  headerBackgroundColor: { dark: string; light: string };
-}>;
+  headerImage: ReactElement
+  centeredImage?: ImageSourcePropType
+}>
 
 export default function ParallaxScrollView({
   children,
   headerImage,
-  headerBackgroundColor,
+  centeredImage,
 }: Props) {
-  const colorScheme = useColorScheme() ?? 'light';
-  const scrollRef = useAnimatedRef<Animated.ScrollView>();
-  const scrollOffset = useScrollViewOffset(scrollRef);
+  const colorScheme = useColorScheme() ?? 'light'
+  const scrollRef = useAnimatedRef<Animated.ScrollView>()
+  const scrollOffset = useScrollViewOffset(scrollRef)
 
   const headerAnimatedStyle = useAnimatedStyle(() => {
     return {
@@ -36,27 +43,31 @@ export default function ParallaxScrollView({
           ),
         },
         {
-          scale: interpolate(scrollOffset.value, [-HEADER_HEIGHT, 0, HEADER_HEIGHT], [2, 1, 1]),
+          scale: interpolate(
+            scrollOffset.value,
+            [-HEADER_HEIGHT, 0, HEADER_HEIGHT],
+            [2, 1, 1]
+          ),
         },
       ],
-    };
-  });
+    }
+  })
 
   return (
     <ThemedView style={styles.container}>
-      <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
-        <Animated.View
-          style={[
-            styles.header,
-            { backgroundColor: headerBackgroundColor[colorScheme] },
-            headerAnimatedStyle,
-          ]}>
+      <Animated.ScrollView ref={scrollRef} scrollEventThrottle={1}>
+        <Animated.View style={[styles.header, headerAnimatedStyle]}>
           {headerImage}
+          {centeredImage && (
+            <View style={styles.logoContainer}>
+              <Image source={centeredImage} style={styles.centeredImage} />
+            </View>
+          )}
         </Animated.View>
-        <ThemedView style={styles.content}>{children}</ThemedView>
+        <PageView>{children}</PageView>
       </Animated.ScrollView>
     </ThemedView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -64,13 +75,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   header: {
-    height: 250,
+    height: HEADER_HEIGHT,
     overflow: 'hidden',
   },
-  content: {
-    flex: 1,
-    padding: 32,
-    gap: 16,
-    overflow: 'hidden',
+  logoContainer: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -75 }, { translateY: -75 }],
   },
-});
+  centeredImage: {
+    width: 150,
+    height: 150,
+  },
+})
