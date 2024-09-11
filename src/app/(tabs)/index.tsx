@@ -1,5 +1,5 @@
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
+import { ThemedText } from '@/src/components/ThemedText'
+import { ThemedView } from '@/src/components/ThemedView'
 import { StyleSheet } from 'react-native'
 
 export default function Home() {

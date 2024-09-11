@@ -1,9 +1,9 @@
 // app/index.tsx
 import { useNavigation, useRootNavigationState, useRouter } from 'expo-router'
 import { useContext, useEffect } from 'react'
-import { UserContext } from '@/contexts/user'
+import { UserContext } from '@/src/contexts/user'
 import { View, ActivityIndicator } from 'react-native'
-import { User } from '@/interfaces/user'
+import { User } from '@/src/interfaces/user'
 
 export default function Index() {
   const router = useRouter()

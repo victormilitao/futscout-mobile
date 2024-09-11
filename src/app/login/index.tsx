@@ -1,22 +1,16 @@
-import ParallaxScrollView from '@/components/ParallaxScrollView'
-import { ThemedText } from '@/components/ThemedText'
-import { ThemedView } from '@/components/ThemedView'
-import Space from '@/components/space'
-import { Colors } from '@/constants/Colors'
-import { useThemeColor } from '@/hooks/useThemeColor'
+import ParallaxScrollView from '@/src/components/ParallaxScrollView'
+import { ThemedText } from '@/src/components/ThemedText'
+import Space from '@/src/components/space'
+import { useThemeColor } from '@/src/hooks/useThemeColor'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React, { useState } from 'react'
 import {
-  View,
   Image,
   StyleSheet,
   TextInput,
   Text,
-  Alert,
-  Button,
-  useColorScheme,
-  Pressable,
+  Alert, Pressable
 } from 'react-native'
 
 export default function Login() {
@@ -39,11 +33,11 @@ export default function Login() {
       <ParallaxScrollView
         headerImage={
           <Image
-            source={require('@/assets/images/bg-login.png')}
+            source={require('@/src/assets/images/bg-login.png')}
             style={styles.bgLogin}
           />
         }
-        centeredImage={require(`@/assets/images/logo.png`)}
+        centeredImage={require(`@/src/assets/images/logo.png`)}
       >
         <ThemedText type="subtitle">
           Acesse o Fut Scout. É simples e rápido.
@@ -74,6 +68,7 @@ export default function Login() {
         >
           <Text style={[styles.text, { color: 'white' }]}>Entrar</Text>
         </Pressable>
+        
       </ParallaxScrollView>
     </>
   )

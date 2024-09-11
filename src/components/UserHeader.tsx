@@ -3,7 +3,7 @@ import { ThemedView } from './ThemedView'
 import { ThemedText } from './ThemedText'
 import { Ionicons } from '@expo/vector-icons'
 import { useContext, useEffect } from 'react'
-import { UserContext } from '@/contexts/user'
+import { UserContext } from '@/src/contexts/user'
 
 export default function UserHeader() {
   const { user, getUser } = useContext(UserContext)

@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react'
 import { ViewProps } from 'react-native'
 import Animated, { useAnimatedRef } from 'react-native-reanimated'
 
-import { ThemedView } from '@/components/ThemedView'
+import { ThemedView } from '@/src/components/ThemedView'
 
 type Props = ViewProps & PropsWithChildren
 

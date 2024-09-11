@@ -1,7 +1,7 @@
-import { Competition } from '@/interfaces/competition'
-import { Team } from '@/interfaces/team'
-import { User } from '@/interfaces/user'
-import api from '@/services/api'
+import { Competition } from '@/src/interfaces/competition'
+import { Team } from '@/src/interfaces/team'
+import { User } from '@/src/interfaces/user'
+import api from '@/src/services/api'
 import { PropsWithChildren, createContext, useEffect, useState } from 'react'
 
 interface UserResponse extends User {

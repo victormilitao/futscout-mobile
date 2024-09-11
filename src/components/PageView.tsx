@@ -1,4 +1,4 @@
-import { Colors } from '@/constants/Colors'
+import { Colors } from '@/src/constants/Colors'
 import { PropsWithChildren } from 'react'
 import { SafeAreaView, StyleSheet, View, useColorScheme } from 'react-native'
 
