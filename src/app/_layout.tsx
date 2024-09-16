@@ -50,7 +50,7 @@
 // }
 
 import { Slot, SplashScreen } from 'expo-router'
-import { AuthProvider } from '../contexts/auth'
+import { SessionProvider } from '../contexts/session'
 import { useColorScheme } from 'react-native'
 import { useFonts } from 'expo-font'
 import { useEffect } from 'react'
@@ -74,9 +74,9 @@ export default function Root() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
+      <SessionProvider>
         <Slot />
-      </AuthProvider>
+      </SessionProvider>
     </ThemeProvider>
   )
 }

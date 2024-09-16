@@ -11,34 +11,34 @@ import { storage } from '../services/storage'
 import { Response } from '../interfaces/response'
 import { HTTP_STATUS } from '../enums/http'
 
-interface AuthRequest {
+interface LoginRequest {
   email: string
   password: string
 }
 
-interface AuthResponse {
+interface LoginResponse {
   token: string
 }
 
-interface ResponseData extends Response<User, AuthResponse> {}
+interface ResponseData extends Response<User, LoginResponse> {}
 
-interface AuthContextType {
+interface SessionContextType {
   authData: ResponseData | null
   isLoading: boolean | null
-  login: (data: AuthRequest) => void
+  login: (data: LoginRequest) => void
   signOut: () => void
 }
 
 const SESSION_STORAGE = 'authData'
 
-export const AuthContext = createContext<AuthContextType>({
+export const SessionContext = createContext<SessionContextType>({
   authData: null,
   isLoading: true,
   login: () => {},
   signOut: () => {},
 })
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({
+export const SessionProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [authData, setAuthData] = useState<ResponseData | null>(null)
@@ -62,7 +62,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     loadStorageData()
   }, [])
 
-  const login = async (data: AuthRequest): Promise<boolean | undefined> => {
+  const login = async (data: LoginRequest): Promise<boolean | undefined> => {
     setIsLoading(true)
     try {
       const response = await api.post<ResponseData>(
@@ -95,12 +95,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   }
 
   return (
-    <AuthContext.Provider value={{ authData, isLoading, login, signOut }}>
+    <SessionContext.Provider value={{ authData, isLoading, login, signOut }}>
       {children}
-    </AuthContext.Provider>
+    </SessionContext.Provider>
   )
 }
 
-export function useAuth() {
-  return useContext(AuthContext)
+export function useSession() {
+  return useContext(SessionContext)
 }

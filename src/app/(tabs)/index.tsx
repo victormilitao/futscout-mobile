@@ -1,11 +1,11 @@
 import { ThemedText } from '@/src/components/ThemedText'
 import { ThemedView } from '@/src/components/ThemedView'
-import { useAuth } from '@/src/contexts/auth'
+import { useSession } from '@/src/contexts/session'
 import { useRouter } from 'expo-router'
 import { StyleSheet, Text } from 'react-native'
 
 export default function Home() {
-  const { signOut } = useAuth()
+  const { signOut } = useSession()
   const router = useRouter()
 
   const handleSignOut = () => {

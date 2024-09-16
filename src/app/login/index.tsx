@@ -1,7 +1,7 @@
 import ParallaxScrollView from '@/src/components/ParallaxScrollView'
 import { ThemedText } from '@/src/components/ThemedText'
 import Space from '@/src/components/space'
-import { useAuth } from '@/src/contexts/auth'
+import { useSession } from '@/src/contexts/session'
 import { useThemeColor } from '@/src/hooks/useThemeColor'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -20,7 +20,7 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
-  const { login } = useAuth()
+  const { login } = useSession()
 
   const handleLogin = async () => {
     const data = { email, password }

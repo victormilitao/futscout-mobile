@@ -1,9 +1,9 @@
-import { ActivityIndicator, Text, View } from 'react-native'
-import { Redirect, Stack } from 'expo-router'
-import { useAuth } from '@/src/contexts/auth'
+import { ActivityIndicator, View } from 'react-native'
+import { Redirect } from 'expo-router'
+import { useSession } from '@/src/contexts/session'
 
 export default function AppLayout() {
-  const { authData, isLoading } = useAuth()
+  const { authData, isLoading } = useSession()
 
   if (isLoading) {
     return (
@@ -11,17 +11,11 @@ export default function AppLayout() {
         <ActivityIndicator size="large" />
       </View>
     )
-    // return <Text>Loading...</Text>
   }
 
   if (!authData) {
     return <Redirect href="/login" />
   }
 
-  return (
-    <Redirect href="/(tabs)" />
-    // <Stack>
-    //   <Stack.Screen name="(tabs)/index" options={{ headerShown: false }} />
-    // </Stack>
-  )
+  return <Redirect href="/(tabs)" />
 }
