@@ -1,6 +1,7 @@
 import ParallaxScrollView from '@/src/components/ParallaxScrollView'
 import { ThemedText } from '@/src/components/ThemedText'
 import Space from '@/src/components/space'
+import { useAuth } from '@/src/contexts/auth'
 import { useThemeColor } from '@/src/hooks/useThemeColor'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
@@ -10,7 +11,8 @@ import {
   StyleSheet,
   TextInput,
   Text,
-  Alert, Pressable
+  Alert,
+  Pressable,
 } from 'react-native'
 
 export default function Login() {
@@ -18,13 +20,22 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
+  const { login } = useAuth()
 
-  const handleLogin = () => {
-    if (email === '' || password === '') {
+  const handleLogin = async () => {
+    const data = { email, password }
+    if (data.email === '' || data.password === '') {
       Alert.alert('Erro', 'Preencha todos os campos')
       return
     }
-    router.replace('/(tabs)')
+
+    try {
+      await login(data)
+      router.navigate('/(tabs)')
+    } catch (error) {
+      console.error(error)
+      Alert.alert('Login error')
+    }
   }
 
   return (
@@ -68,7 +79,6 @@ export default function Login() {
         >
           <Text style={[styles.text, { color: 'white' }]}>Entrar</Text>
         </Pressable>
-        
       </ParallaxScrollView>
     </>
   )
