@@ -1,5 +1,5 @@
 import { User } from '@/src/interfaces/user'
-import api from '@/src/services/api'
+import api from '@/src/lib/api'
 import {
   ReactNode,
   createContext,
@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { storage } from '../services/storage'
+import { storage } from '../lib/storage'
 import { Response } from '../interfaces/response'
 import { HTTP_STATUS } from '../enums/http'
 
@@ -30,6 +30,7 @@ interface SessionContextType {
 }
 
 const SESSION_STORAGE = 'authData'
+const TOKEN_STORAGE = 'token'
 
 export const SessionContext = createContext<SessionContextType>({
   authData: null,
@@ -73,10 +74,11 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
         const authData = response?.data
         setAuthData(authData)
         storage.setItem(SESSION_STORAGE, JSON.stringify(authData))
+        storage.setItem(TOKEN_STORAGE, (authData as any)?.token)
         return
       }
     } catch (error) {
-      throw(error)
+      throw error
     } finally {
       setIsLoading(false)
     }
@@ -86,6 +88,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
     setIsLoading(true)
     try {
       await storage.removeItem(SESSION_STORAGE)
+      await storage.removeItem(TOKEN_STORAGE)
       setAuthData(null)
     } catch (error) {
       console.error(error)

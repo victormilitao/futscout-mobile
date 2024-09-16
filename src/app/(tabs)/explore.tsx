@@ -35,7 +35,7 @@ export default function Progress() {
                 colorType="infoText"
                 style={styles.yearInfoFooter}
               >
-                {dashboardByYear?.attributs?.matches}
+                {dashboardByYear?.attributes?.matches}
               </ThemedText>
             </Info>
             <Info style={styles.yearDetails}>
@@ -48,7 +48,7 @@ export default function Progress() {
                 colorType="infoText"
                 style={styles.yearInfoFooter}
               >
-                {dashboardByYear?.attributs?.scores}
+                {dashboardByYear?.attributes?.scores}
               </ThemedText>
             </Info>
             <Info style={styles.yearDetails}>
@@ -61,7 +61,7 @@ export default function Progress() {
                 colorType="infoText"
                 style={styles.yearInfoFooter}
               >
-                {dashboardByYear?.attributs?.assists}
+                {dashboardByYear?.attributes?.assists}
               </ThemedText>
             </Info>
           </ThemedView>
@@ -71,7 +71,7 @@ export default function Progress() {
 
         <ThemedText type="subtitle">Equipes que joguei</ThemedText>
         <View style={[styles.section, styles.competitionInfo]}>
-          {dashboardByYear?.attributs?.teams.map((team, index) => (
+          {dashboardByYear?.attributes?.teams.map((team, index) => (
             <Info key={index}>
               <ThemedText type="defaultSemiBold" colorType="infoText">
                 {team.name}
@@ -84,7 +84,7 @@ export default function Progress() {
 
         <ThemedText type="subtitle">Competições</ThemedText>
         <View style={[styles.section, styles.competitionInfo]}>
-          {dashboardByYear?.attributs?.competitions.map((competition, index) => (
+          {dashboardByYear?.attributes?.competitions.map((competition, index) => (
             <Info key={index}>
               <ThemedText type="defaultSemiBold" colorType="infoText">
                 {competition?.name}
