@@ -28,8 +28,9 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    padding: 8,
+    padding: 10,
     backgroundColor: '#fff',
     fontFamily: Fonts.poppins,
+    fontSize: 16
   },
 })
