@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from 'react'
 import { StyleSheet, TextInputProps, TextInput } from 'react-native'
 import { ThemedText } from '../ThemedText'
+import { Fonts } from '@/src/constants/Fonts'
 
 type Props = PropsWithChildren<TextInputProps> & {
   label?: string
@@ -8,9 +9,6 @@ type Props = PropsWithChildren<TextInputProps> & {
 }
 
 export default function Input({ children, error, ...rest }: Props) {
-  // const bgColor = useThemeColor({}, 'brandingPrimary')
-  // const textColor = useThemeColor({}, 'white')
-
   return (
     <>
       {rest.label && <ThemedText type='default'>{rest.label}</ThemedText>}
@@ -20,7 +18,7 @@ export default function Input({ children, error, ...rest }: Props) {
         autoCapitalize='none'
         {...rest}
       />
-      {error && <ThemedText>{error}</ThemedText>}
+      {error && <ThemedText type='error'>{error}</ThemedText>}
     </>
   )
 }
@@ -30,8 +28,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 5,
-    padding: 12,
-    marginBottom: 16,
+    padding: 8,
     backgroundColor: '#fff',
+    fontFamily: Fonts.poppins,
   },
 })
