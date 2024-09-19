@@ -11,8 +11,6 @@ export type ThemedTextProps = TextProps & {
   colorType?: keyof typeof Colors.light
 }
 
-const errorColor = useThemeColor({}, 'error')
-
 export function ThemedText({
   style,
   lightColor,
@@ -22,6 +20,7 @@ export function ThemedText({
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, colorType)
+  const errorColor = useThemeColor({}, 'error')
 
   return (
     <Text
@@ -34,7 +33,7 @@ export function ThemedText({
         type === 'info' ? styles.info : undefined,
         type === 'defaultSemiBold' ? styles.defaultSemiBold : undefined,
         type === 'link' ? styles.link : undefined,
-        type === 'error' ? styles.error : undefined,
+        type === 'error' ? { ...styles.error, color: errorColor } : undefined,
         style,
       ]}
       {...rest}
@@ -76,6 +75,5 @@ const styles = StyleSheet.create({
   error: {
     lineHeight: 30,
     fontSize: 14,
-    color: errorColor,
   },
 });

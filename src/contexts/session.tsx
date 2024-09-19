@@ -44,6 +44,10 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
   const [authData, setAuthData] = useState<ResponseData | null>(null)
   const [isLoading, setIsLoading] = useState<boolean | null>(true)
 
+  useEffect(() => {
+    loadStorageData()
+  }, [])
+
   const loadStorageData = async (): Promise<void> => {
     setIsLoading(true)
     try {
@@ -57,10 +61,6 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
       setIsLoading(false)
     }
   }
-
-  useEffect(() => {
-    loadStorageData()
-  }, [])
 
   const login = async (data: LoginRequest): Promise<boolean | undefined> => {
     setIsLoading(true)
