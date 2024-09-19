@@ -37,8 +37,6 @@ export default function Login() {
   })
 
   const handleLogin = async (data: LoginData) => {
-    console.log(data)
-
     try {
       await login(data)
       router.navigate('/(tabs)')

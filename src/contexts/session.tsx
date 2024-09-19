@@ -9,7 +9,7 @@ import {
 } from 'react'
 import { storage } from '../services/storage'
 import { Response } from '../interfaces/response'
-import { HTTP_STATUS } from '../enums/http'
+import { HttpStatusCode } from 'axios'
 
 interface LoginRequest {
   email: string
@@ -56,27 +56,27 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
         setAuthData(JSON.parse(authDataSerialized))
       }
     } catch (error) {
-      console.log(error)
+      console.error(error)
     } finally {
       setIsLoading(false)
     }
   }
 
-  const login = async (data: LoginRequest): Promise<boolean | undefined> => {
+  const login = async (data: LoginRequest): Promise<void> => {
     setIsLoading(true)
     try {
       const response = await api.post<ResponseData>(
         '/authentications/login',
         data
       )
-      if (response.status === HTTP_STATUS.OK) {
+      if (response.status === HttpStatusCode.Ok) {
         const authData = response?.data
         setAuthData(authData)
         storage.setItem(SESSION_STORAGE, JSON.stringify(authData))
         return
       }
     } catch (error) {
-      throw(error)
+      throw error
     } finally {
       setIsLoading(false)
     }
