@@ -85,7 +85,7 @@ export default function Login() {
             </>
           )}
         />
-
+        <Space />
         <Controller
           control={control}
           name='password'
@@ -104,7 +104,7 @@ export default function Login() {
           )}
         />
 
-        <Space />
+        <Space size='lg' />
         <Button onPress={handleSubmit(handleLogin, onError)}>Entrar</Button>
       </ParallaxScrollView>
     </>

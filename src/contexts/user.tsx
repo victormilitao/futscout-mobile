@@ -2,7 +2,7 @@ import { Competition } from '@/src/interfaces/competition'
 import { Team } from '@/src/interfaces/team'
 import { User } from '@/src/interfaces/user'
 import api from '@/src/services/api'
-import { PropsWithChildren, createContext, useEffect, useState } from 'react'
+import { PropsWithChildren, createContext, useState } from 'react'
 
 interface UserResponse extends User {
   photo_url: string
@@ -35,6 +35,10 @@ export const UserContext = createContext<UserContextType>({
 
 export default function UserProvider({ children }: PropsWithChildren) {
   const [user, setUser] = useState<UserResponse | null>(null)
+  const [
+    dashboardByYear,
+    setDashboardByYear,
+  ] = useState<DashBoardByYearResponse | null>(null)
 
   const getUser = async () => {
     try {
@@ -45,10 +49,6 @@ export default function UserProvider({ children }: PropsWithChildren) {
     }
   }
 
-  const [
-    dashboardByYear,
-    setDashboardByYear,
-  ] = useState<DashBoardByYearResponse | null>(null)
   const getDashboardByYear = async () => {
     try {
       const year = new Date().getFullYear() - 1
