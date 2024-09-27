@@ -1,7 +1,7 @@
 import { Competition } from '@/src/interfaces/competition'
 import { Team } from '@/src/interfaces/team'
 import { User } from '@/src/interfaces/user'
-import api from '@/src/services/api'
+import api from '@/src/lib/api'
 import { PropsWithChildren, createContext, useState } from 'react'
 
 interface UserResponse extends User {
@@ -10,7 +10,7 @@ interface UserResponse extends User {
 
 interface DashBoardByYearResponse {
   year: string
-  attributs: {
+  attributes: {
     matches: number
     scores: number
     assists: number
@@ -51,9 +51,9 @@ export default function UserProvider({ children }: PropsWithChildren) {
 
   const getDashboardByYear = async () => {
     try {
-      const year = new Date().getFullYear() - 1
+      const year = new Date().getFullYear()
       const response = await api.get(`/dashboards/${year}/by_year`)
-      setDashboardByYear(response?.data)
+      setDashboardByYear(response?.data?.data)
     } catch (error) {
       console.error('Error fetching user:', error)
     }
