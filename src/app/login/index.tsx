@@ -1,34 +1,42 @@
+import Button from '@/src/components/Button'
 import ParallaxScrollView from '@/src/components/ParallaxScrollView'
 import { ThemedText } from '@/src/components/ThemedText'
+import Input from '@/src/components/form/Input'
 import Space from '@/src/components/space'
 import { useSession } from '@/src/contexts/session'
-import { useThemeColor } from '@/src/hooks/useThemeColor'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
-import React, { useState } from 'react'
-import {
-  Image,
-  StyleSheet,
-  TextInput,
-  Text,
-  Alert,
-  Pressable,
-} from 'react-native'
+import React from 'react'
+import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form'
+import { Image, StyleSheet, Alert } from 'react-native'
+import zod from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+const loginValidation = zod.object({
+  email: zod.string().email('Informe um email válido'),
+  password: zod
+    .string()
+    .min(6, 'O password deve conter no mínimo 6 caracteres'),
+})
+type LoginData = zod.infer<typeof loginValidation>
 
 export default function Login() {
-  const color = useThemeColor({}, 'brandingPrimary')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
   const router = useRouter()
   const { login } = useSession()
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginData>({
+    resolver: zodResolver(loginValidation),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    mode: 'onSubmit'
+  })
 
-  const handleLogin = async () => {
-    const data = { email, password }
-    if (data.email === '' || data.password === '') {
-      Alert.alert('Erro', 'Preencha todos os campos')
-      return
-    }
-
+  const handleLogin = async (data: LoginData) => {
     try {
       await login(data)
       router.navigate('/(tabs)')
@@ -38,9 +46,13 @@ export default function Login() {
     }
   }
 
+  const onError: SubmitErrorHandler<LoginData> = (errors, e) => {
+    console.log(JSON.stringify(errors))
+  }
+
   return (
     <>
-      <StatusBar style="light" />
+      <StatusBar style='light' />
       <ParallaxScrollView
         headerImage={
           <Image
@@ -50,35 +62,48 @@ export default function Login() {
         }
         centeredImage={require(`@/src/assets/images/logo.png`)}
       >
-        <ThemedText type="subtitle">
+        <ThemedText type='subtitle'>
           Acesse o Fut Scout. É simples e rápido.
         </ThemedText>
-        <Space size="md" />
-        <Text>Email</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <Text>Senha</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoCapitalize="none"
+        <Space size='md' />
+        <Controller
+          control={control}
+          name='email'
+          render={({ field: { onChange, value } }) => (
+            <>
+              <Input
+                label='Email'
+                placeholder='Email'
+                value={value}
+                onChangeText={onChange}
+                keyboardType='email-address'
+                autoCapitalize='none'
+                error={errors.email?.message}
+              />
+            </>
+          )}
         />
         <Space />
-        <Pressable
-          style={[styles.button, { backgroundColor: color }]}
-          onPress={handleLogin}
-        >
-          <Text style={[styles.text, { color: 'white' }]}>Entrar</Text>
-        </Pressable>
+        <Controller
+          control={control}
+          name='password'
+          render={({ field: { onChange, value } }) => (
+            <>
+              <Input
+                label='Senha'
+                placeholder='Senha'
+                value={value}
+                onChangeText={onChange}
+                secureTextEntry
+                autoCapitalize='none'
+                error={errors.password?.message}
+              />
+            </>
+          )}
+        />
+
+        <Space size='lg' />
+        <Button onPress={handleSubmit(handleLogin, onError)}>Entrar</Button>
       </ParallaxScrollView>
     </>
   )
@@ -101,29 +126,5 @@ const styles = StyleSheet.create({
   logo: {
     width: 150,
     height: 150,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 12,
-    marginBottom: 16,
-    backgroundColor: '#fff',
-  },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 4,
-    elevation: 3,
-    backgroundColor: 'black',
-  },
-  text: {
-    fontSize: 16,
-    lineHeight: 21,
-    fontWeight: 'bold',
-    letterSpacing: 0.25,
-    color: 'white',
   },
 })
