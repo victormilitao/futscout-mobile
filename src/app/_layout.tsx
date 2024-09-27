@@ -1,4 +1,4 @@
-import { Slot, SplashScreen } from 'expo-router'
+import { Slot, SplashScreen, Stack } from 'expo-router'
 import { SessionProvider } from '../contexts/session'
 import { useColorScheme } from 'react-native'
 import { useFonts } from 'expo-font'
@@ -8,6 +8,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native'
+import UserProvider from '../contexts/user'
 
 export default function Root() {
   const colorScheme = useColorScheme()
@@ -24,7 +25,9 @@ export default function Root() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <SessionProvider>
-        <Slot />
+        <UserProvider>
+          <Stack screenOptions={{ headerShown: false }} />
+        </UserProvider>
       </SessionProvider>
     </ThemeProvider>
   )

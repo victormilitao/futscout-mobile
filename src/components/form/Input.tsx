@@ -1,25 +1,28 @@
 import type { PropsWithChildren } from 'react'
-import { StyleSheet, TextInputProps, TextInput } from 'react-native'
+import {
+  StyleSheet,
+  TextInputProps,
+  TextInput,
+  StyleProp,
+  ViewStyle,
+} from 'react-native'
 import { ThemedText } from '../ThemedText'
 import { Fonts } from '@/src/constants/Fonts'
+import { ThemedView } from '../ThemedView'
 
 type Props = PropsWithChildren<TextInputProps> & {
   label?: string
   error?: string
+  wrapStyle?: StyleProp<ViewStyle>
 }
 
-export default function Input({ children, error, ...rest }: Props) {
+export default function Input({ children, error, wrapStyle, ...rest }: Props) {
   return (
-    <>
+    <ThemedView style={wrapStyle}>
       {rest.label && <ThemedText type='default'>{rest.label}</ThemedText>}
-      <TextInput
-        style={[styles.input]}
-        placeholder='Senha'
-        autoCapitalize='none'
-        {...rest}
-      />
+      <TextInput style={[styles.input]} autoCapitalize='none' {...rest} />
       {error && <ThemedText type='error'>{error}</ThemedText>}
-    </>
+    </ThemedView>
   )
 }
 
@@ -31,6 +34,6 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#fff',
     fontFamily: Fonts.poppins,
-    fontSize: 16
+    fontSize: 16,
   },
 })

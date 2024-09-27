@@ -19,7 +19,6 @@ export function PageView({ children }: PropsWithChildren) {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    // paddingTop: 20,
   },
   container: {
     flex: 1,

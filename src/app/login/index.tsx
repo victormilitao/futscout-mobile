@@ -16,7 +16,7 @@ const loginValidation = zod.object({
   email: zod.string().email('Informe um email válido'),
   password: zod
     .string()
-    .min(6, 'O password deve conter no mínimo 6 caracteres'),
+    .min(6, 'A senha deve conter no mínimo 6 caracteres'),
 })
 type LoginData = zod.infer<typeof loginValidation>
 
