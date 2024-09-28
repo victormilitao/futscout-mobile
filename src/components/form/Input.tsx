@@ -12,12 +12,7 @@ export default function Input({ children, error, ...rest }: Props) {
   return (
     <>
       {rest.label && <ThemedText type='default'>{rest.label}</ThemedText>}
-      <TextInput
-        style={[styles.input]}
-        placeholder='Senha'
-        autoCapitalize='none'
-        {...rest}
-      />
+      <TextInput style={[styles.input]} autoCapitalize='none' {...rest} />
       {error && <ThemedText type='error'>{error}</ThemedText>}
     </>
   )
@@ -30,7 +25,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     backgroundColor: '#fff',
-    fontFamily: Fonts.poppins,
-    fontSize: 16
+    fontFamily: Fonts.default,
+    fontSize: 16,
   },
 })

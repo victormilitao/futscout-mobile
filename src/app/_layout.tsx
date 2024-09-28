@@ -13,6 +13,7 @@ export default function Root() {
   const colorScheme = useColorScheme()
   const [loaded] = useFonts({
     SpaceMono: require('@/src/assets/fonts/SpaceMono-Regular.ttf'),
+    Poppins: require('@/src/assets/fonts/Poppins-Medium.ttf'),
   })
 
   useEffect(() => {
