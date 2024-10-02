@@ -55,7 +55,7 @@ export default function UserProvider({ children }: PropsWithChildren) {
       const response = await api.get(`/dashboards/${year}/by_year`)
       setDashboardByYear(response?.data?.data)
     } catch (error) {
-      console.error('Error fetching user:', error)
+      console.error('Error fetching dashboard user:', error)
     }
   }
 

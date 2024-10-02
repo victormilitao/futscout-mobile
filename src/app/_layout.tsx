@@ -25,9 +25,7 @@ export default function Root() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <SessionProvider>
-        <UserProvider>
-          <Stack screenOptions={{ headerShown: false }} />
-        </UserProvider>
+        <Stack screenOptions={{ headerShown: false }} />
       </SessionProvider>
     </ThemeProvider>
   )

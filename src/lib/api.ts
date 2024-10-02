@@ -34,8 +34,9 @@ api.interceptors.request.use(
   async (config) => {
     if (!token) token = await storage.getItem('token')
     if (token) config.headers.Authorization = `Bearer ${token}`
-    
-console.log(config.headers)
+
+    console.log('token: ', token)
+    console.log('headers: ', config.headers)
     return config
   },
   function (error) {
