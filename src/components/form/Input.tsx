@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     backgroundColor: '#fff',
-    fontFamily: Fonts.poppins,
+    fontFamily: Fonts.default,
     fontSize: 16,
   },
 })

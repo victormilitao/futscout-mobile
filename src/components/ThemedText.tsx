@@ -43,7 +43,7 @@ export function ThemedText({
 
 const styles = StyleSheet.create({
   fixed: {
-    fontFamily: Fonts.poppins
+    fontFamily: Fonts.default
   },
   default: {
     fontSize: 16,
