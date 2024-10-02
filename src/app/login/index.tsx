@@ -11,6 +11,7 @@ import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form'
 import { Image, StyleSheet, Alert } from 'react-native'
 import zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Icon } from '@/src/components/icon'
 
 const loginValidation = zod.object({
   email: zod.string().email('Informe um email válido'),
@@ -22,7 +23,7 @@ type LoginData = zod.infer<typeof loginValidation>
 
 export default function Login() {
   const router = useRouter()
-  const { login } = useSession()
+  const { login, isLoading } = useSession()
   const {
     control,
     handleSubmit,
@@ -103,7 +104,7 @@ export default function Login() {
         />
 
         <Space size='lg' />
-        <Button onPress={handleSubmit(handleLogin, onError)}>Entrar</Button>
+        <Button onPress={handleSubmit(handleLogin, onError)} isLoading={isLoading}>Entrar</Button>
       </ParallaxScrollView>
     </>
   )

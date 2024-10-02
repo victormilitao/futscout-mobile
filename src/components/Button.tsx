@@ -1,24 +1,40 @@
 import type { PropsWithChildren } from 'react'
-import { Pressable, PressableProps, StyleSheet, Text, View } from 'react-native'
-import Animated, { useAnimatedRef } from 'react-native-reanimated'
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableOpacityProps,
+} from 'react-native'
 
 import { useThemeColor } from '../hooks/useThemeColor'
 
-type Props = PropsWithChildren<PressableProps>
+type Props = {
+  isLoading?: boolean
+} & PropsWithChildren<TouchableOpacityProps>
 
-export default function Button({ children, ...rest }: Props) {
-  const bgColor = useThemeColor({}, 'brandingPrimary')
+export default function Button({ children, isLoading = true, ...rest }: Props) {
+  const disabled = useThemeColor({},'disabled')
+  const brandingPrimary = useThemeColor({},'brandingPrimary')
   const textColor = useThemeColor({}, 'white')
+  const backgroundColor = (rest.disabled || isLoading) ? disabled : brandingPrimary
 
   return (
-    <Pressable style={[styles.button, { backgroundColor: bgColor }]} {...rest}>
+    <TouchableOpacity
+      style={[styles.button, { backgroundColor }]}
+      disabled={isLoading}
+      {...rest}
+    >
       <Text style={[styles.text, { color: textColor }]}>{children}</Text>
-    </Pressable>
+      {isLoading && <ActivityIndicator color={textColor}></ActivityIndicator>}
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   button: {
+    flexDirection: 'row',
+    gap: 6,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 12,
