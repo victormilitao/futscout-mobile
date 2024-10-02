@@ -7,7 +7,6 @@ import { useThemeColor } from '../hooks/useThemeColor'
 type Props = PropsWithChildren<PressableProps>
 
 export default function Button({ children, ...rest }: Props) {
-  const scrollRef = useAnimatedRef<Animated.ScrollView>()
   const bgColor = useThemeColor({}, 'brandingPrimary')
   const textColor = useThemeColor({}, 'white')
 
