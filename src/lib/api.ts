@@ -14,12 +14,14 @@ api.interceptors.response.use(
     return response
   },
   (error) => {
-    const { data, status } = error?.response
-    if (
-      status === 401 &&
-      ['Token expirado', 'Token inválido'].includes(data?.errors?.at(0))
-    ) {
-      console.error('Token expirado ou inválido')
+    if (error?.response) {
+      const { data, status } = error?.response
+      if (
+        status === 401 &&
+        ['Token expirado', 'Token inválido'].includes(data?.errors?.at(0))
+      ) {
+        console.error('Token expirado ou inválido')
+      }
     }
 
     if (error.request) {

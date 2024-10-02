@@ -55,7 +55,11 @@ export default function ParallaxScrollView({
 
   return (
     <ThemedView style={styles.container}>
-      <Animated.ScrollView ref={scrollRef} scrollEventThrottle={1}>
+      <Animated.ScrollView
+        ref={scrollRef}
+        scrollEventThrottle={1}
+        automaticallyAdjustKeyboardInsets={true}
+      >
         <Animated.View style={[styles.header, headerAnimatedStyle]}>
           {headerImage}
           {centeredImage && (
