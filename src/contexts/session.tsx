@@ -24,7 +24,7 @@ interface ResponseData extends Response<User, LoginResponse> {}
 
 interface SessionContextType {
   authData: ResponseData | null
-  isLoading: boolean | null
+  isLoading: boolean | undefined
   login: (data: LoginRequest) => void
   signOut: () => void
 }
@@ -43,7 +43,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [authData, setAuthData] = useState<ResponseData | null>(null)
-  const [isLoading, setIsLoading] = useState<boolean | null>(true)
+  const [isLoading, setIsLoading] = useState<boolean | undefined>(true)
 
   useEffect(() => {
     loadStorageData()

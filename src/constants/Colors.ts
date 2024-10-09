@@ -20,6 +20,7 @@ export const Colors = {
     brandingPrimary: '#228352',
     white: tintColorWhite,
     error: error,
+    disabled: '#8BB8A0'
   },
   dark: {
     text: '#ECEDEE',
@@ -32,5 +33,6 @@ export const Colors = {
     brandingPrimary: '#228352',
     white: tintColorWhite,
     error: error,
+    disabled: '#8BB8A0'
   },
 }
