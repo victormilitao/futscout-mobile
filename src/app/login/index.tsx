@@ -11,13 +11,10 @@ import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form'
 import { Image, StyleSheet, Alert } from 'react-native'
 import zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Icon } from '@/src/components/icon'
 
 const loginValidation = zod.object({
   email: zod.string().email('Informe um email válido'),
-  password: zod
-    .string()
-    .min(6, 'A senha deve conter no mínimo 6 caracteres'),
+  password: zod.string().min(6, 'A senha deve conter no mínimo 6 caracteres'),
 })
 type LoginData = zod.infer<typeof loginValidation>
 
@@ -34,10 +31,11 @@ export default function Login() {
       email: '',
       password: '',
     },
-    mode: 'onSubmit'
+    mode: 'onSubmit',
   })
 
   const handleLogin = async (data: LoginData) => {
+    console.log(data)
     try {
       await login(data)
       router.navigate('/(tabs)')
@@ -67,44 +65,35 @@ export default function Login() {
           Acesse o Fut Scout. É simples e rápido.
         </ThemedText>
         <Space size='md' />
-        <Controller
-          control={control}
+
+        <Input
           name='email'
-          render={({ field: { onChange, value } }) => (
-            <>
-              <Input
-                label='Email'
-                placeholder='Email'
-                value={value}
-                onChangeText={onChange}
-                keyboardType='email-address'
-                autoCapitalize='none'
-                error={errors.email?.message}
-              />
-            </>
-          )}
-        />
-        <Space />
-        <Controller
           control={control}
+          label='Email'
+          placeholder='Email'
+          keyboardType='email-address'
+          autoCapitalize='none'
+          error={errors.email?.message}
+        />
+
+        <Space />
+        <Input
           name='password'
-          render={({ field: { onChange, value } }) => (
-            <>
-              <Input
-                label='Senha'
-                placeholder='Senha'
-                value={value}
-                onChangeText={onChange}
-                secureTextEntry
-                autoCapitalize='none'
-                error={errors.password?.message}
-              />
-            </>
-          )}
+          control={control}
+          label='Senha'
+          placeholder='Senha'
+          secureTextEntry
+          autoCapitalize='none'
+          error={errors.password?.message}
         />
 
         <Space size='lg' />
-        <Button onPress={handleSubmit(handleLogin, onError)} isLoading={isLoading}>Entrar</Button>
+        <Button
+          onPress={handleSubmit(handleLogin, onError)}
+          isLoading={isLoading}
+        >
+          Entrar
+        </Button>
       </ParallaxScrollView>
     </>
   )
