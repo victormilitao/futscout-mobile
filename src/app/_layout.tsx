@@ -1,4 +1,4 @@
-import { Slot, SplashScreen, Stack } from 'expo-router'
+import { SplashScreen, Stack } from 'expo-router'
 import { SessionProvider } from '../contexts/session'
 import { useColorScheme } from 'react-native'
 import { useFonts } from 'expo-font'
@@ -8,7 +8,7 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native'
-import UserProvider from '../contexts/user'
+import Toaster from '../components/toast'
 
 export default function Root() {
   const colorScheme = useColorScheme()
@@ -28,6 +28,7 @@ export default function Root() {
       <SessionProvider>
         <Stack screenOptions={{ headerShown: false }} />
       </SessionProvider>
+      <Toaster />
     </ThemeProvider>
   )
 }

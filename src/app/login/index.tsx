@@ -8,10 +8,10 @@ import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
 import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form'
-import { Image, StyleSheet, Alert } from 'react-native'
+import { Image, StyleSheet } from 'react-native'
 import zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Icon } from '@/src/components/icon'
+import { showError, showInfo, showSuccess } from '@/src/lib/toast'
 
 const loginValidation = zod.object({
   email: zod.string().email('Informe um email válido'),
