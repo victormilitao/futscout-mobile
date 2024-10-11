@@ -7,10 +7,11 @@ import { useSession } from '@/src/contexts/session'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form'
-import { Image, StyleSheet, Alert } from 'react-native'
+import { SubmitErrorHandler, useForm } from 'react-hook-form'
+import { Image, StyleSheet } from 'react-native'
 import zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { showError } from '@/src/lib/toast'
 
 const loginValidation = zod.object({
   email: zod.string().email('Informe um email válido'),
@@ -41,7 +42,7 @@ export default function Login() {
       router.navigate('/(tabs)')
     } catch (error) {
       console.error(error)
-      Alert.alert('Login error')
+      showError('Erro ao logar')
     }
   }
 
