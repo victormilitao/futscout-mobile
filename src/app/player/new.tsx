@@ -1,32 +1,50 @@
+import Button from '@/src/components/Button'
 import { PageView } from '@/src/components/PageView'
 import { ThemedText } from '@/src/components/ThemedText'
 import { ThemedView } from '@/src/components/ThemedView'
 import Input from '@/src/components/form/Input'
+import Space from '@/src/components/space'
+import { usePlayer } from '@/src/contexts/player'
+import { showError } from '@/src/lib/toast'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'expo-router'
 import { useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import zod from 'zod'
 
 export default function NewPlayer() {
+  const router = useRouter()
+  const { isLoading, player, savePlayer } = usePlayer()
   const newPlayerValidation = zod.object({
     name: zod.string(),
     nick: zod.string(),
-    dateBirth: zod.date(),
+    birth_date: zod.date().optional(),
   })
-  type LoginData = zod.infer<typeof newPlayerValidation>
+  type PlayerData = zod.infer<typeof newPlayerValidation>
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginData>({
+  } = useForm<PlayerData>({
     resolver: zodResolver(newPlayerValidation),
     defaultValues: {
       name: '',
       nick: '',
-      dateBirth: undefined,
+      birth_date: undefined,
     },
     mode: 'onSubmit',
   })
+
+  const handleSave = async (data: PlayerData) => {
+    console.log('data', data)
+    try {
+      await savePlayer(data)
+      router.navigate('/(tabs)')
+    } catch (error) {
+      console.error(error)
+      showError('Erro ao salvar jogador')
+    }
+  }
 
   return (
     <PageView>
@@ -34,7 +52,12 @@ export default function NewPlayer() {
         Jogador
       </ThemedText>
       <View style={styles.form}>
-        <Input control={control} name='name' label='Nome' />
+        <Input
+          control={control}
+          name='name'
+          label='Nome'
+          error={errors.name?.message}
+        />
         <ThemedView style={styles.row}>
           <Input
             control={control}
@@ -44,11 +67,15 @@ export default function NewPlayer() {
           />
           <Input
             control={control}
-            name='dateBirth'
+            name='birth_date'
             wrapStyle={{ flex: 1 }}
             label='Nascimento'
           />
         </ThemedView>
+        <Space />
+        <Button onPress={handleSubmit(handleSave)} isLoading={isLoading}>
+          Próximo passo
+        </Button>
       </View>
     </PageView>
   )

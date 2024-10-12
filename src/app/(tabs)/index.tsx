@@ -13,13 +13,13 @@ export default function Home() {
 
   useEffect(() => {
     getPlayer()
-  }, [])
+  }, [router])
 
   const handleSignOut = () => {
     signOut()
     router.navigate('/login')
   }
-
+console.log('playerrr', player)
   if (!player) return <Redirect href={'/player/new'} />
 
   return (
