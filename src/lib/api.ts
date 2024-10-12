@@ -2,7 +2,7 @@ import axios from 'axios'
 import { storage } from './storage'
 
 const api = axios.create({
-  baseURL: 'https://futscount.onrender.com/',
+  baseURL: 'http://localhost:3000/',
   headers: { 'Content-Type': 'application/json' },
   timeout: 10000,
 })

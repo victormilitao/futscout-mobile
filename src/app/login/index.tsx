@@ -7,17 +7,15 @@ import { useSession } from '@/src/contexts/session'
 import { useRouter } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import React from 'react'
-import { Controller, SubmitErrorHandler, useForm } from 'react-hook-form'
+import { SubmitErrorHandler, useForm } from 'react-hook-form'
 import { Image, StyleSheet } from 'react-native'
 import zod from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showError, showInfo, showSuccess } from '@/src/lib/toast'
+import { showError } from '@/src/lib/toast'
 
 const loginValidation = zod.object({
   email: zod.string().email('Informe um email válido'),
-  password: zod
-    .string()
-    .min(6, 'A senha deve conter no mínimo 6 caracteres'),
+  password: zod.string().min(6, 'A senha deve conter no mínimo 6 caracteres'),
 })
 type LoginData = zod.infer<typeof loginValidation>
 
@@ -34,16 +32,17 @@ export default function Login() {
       email: '',
       password: '',
     },
-    mode: 'onSubmit'
+    mode: 'onSubmit',
   })
 
   const handleLogin = async (data: LoginData) => {
+    console.log(data)
     try {
       await login(data)
       router.navigate('/(tabs)')
     } catch (error) {
       console.error(error)
-      Alert.alert('Login error')
+      showError('Erro ao logar')
     }
   }
 
@@ -67,44 +66,35 @@ export default function Login() {
           Acesse o Fut Scout. É simples e rápido.
         </ThemedText>
         <Space size='md' />
-        <Controller
-          control={control}
+
+        <Input
           name='email'
-          render={({ field: { onChange, value } }) => (
-            <>
-              <Input
-                label='Email'
-                placeholder='Email'
-                value={value}
-                onChangeText={onChange}
-                keyboardType='email-address'
-                autoCapitalize='none'
-                error={errors.email?.message}
-              />
-            </>
-          )}
-        />
-        <Space />
-        <Controller
           control={control}
+          label='Email'
+          placeholder='Email'
+          keyboardType='email-address'
+          autoCapitalize='none'
+          error={errors.email?.message}
+        />
+
+        <Space />
+        <Input
           name='password'
-          render={({ field: { onChange, value } }) => (
-            <>
-              <Input
-                label='Senha'
-                placeholder='Senha'
-                value={value}
-                onChangeText={onChange}
-                secureTextEntry
-                autoCapitalize='none'
-                error={errors.password?.message}
-              />
-            </>
-          )}
+          control={control}
+          label='Senha'
+          placeholder='Senha'
+          secureTextEntry
+          autoCapitalize='none'
+          error={errors.password?.message}
         />
 
         <Space size='lg' />
-        <Button onPress={handleSubmit(handleLogin, onError)} isLoading={isLoading}>Entrar</Button>
+        <Button
+          onPress={handleSubmit(handleLogin, onError)}
+          isLoading={isLoading}
+        >
+          Entrar
+        </Button>
       </ParallaxScrollView>
     </>
   )

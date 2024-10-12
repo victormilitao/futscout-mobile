@@ -1,21 +1,30 @@
 import { ThemedText } from '@/src/components/ThemedText'
 import { ThemedView } from '@/src/components/ThemedView'
+import PlayerProvider, { PlayerContext } from '@/src/contexts/player'
 import { useSession } from '@/src/contexts/session'
-import { useRouter } from 'expo-router'
+import { Redirect, useRouter } from 'expo-router'
+import { useContext, useEffect } from 'react'
 import { StyleSheet, Text } from 'react-native'
 
 export default function Home() {
   const { signOut } = useSession()
+  const { player, getPlayer } = useContext(PlayerContext)
   const router = useRouter()
+
+  useEffect(() => {
+    getPlayer()
+  }, [])
 
   const handleSignOut = () => {
     signOut()
     router.navigate('/login')
   }
 
+  if (!player) return <Redirect href={'/player/new'} />
+
   return (
     <ThemedView style={styles.titleContainer}>
-      <ThemedText type="title">Home</ThemedText>
+      <ThemedText type='title'>Home</ThemedText>
       <Text
         onPress={() => {
           handleSignOut()
