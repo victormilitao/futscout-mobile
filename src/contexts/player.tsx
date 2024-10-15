@@ -1,6 +1,7 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import api from '../lib/api'
-import { Response } from '../interfaces/response'
+import { Response, ResponseArray } from '../interfaces/response'
+import { AxiosError } from 'axios'
 
 interface Player {
   name: string
@@ -32,9 +33,9 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   const getPlayer = async () => {
     setIsLoading(true)
     try {
-      const response = await api.get<Response<Player>>('/players')
-      console.log('get player: ', player)
-      setPlayer(response?.data?.data?.attributes)
+      const response = await api.get<ResponseArray<Player>>('/players')
+      console.log('get player: ', response?.data?.data[0]?.attributes)
+      setPlayer(response?.data?.data[0]?.attributes)
     } catch (error) {
       throw error
     } finally {
@@ -49,7 +50,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
       console.log('response player save: ', response)
       setPlayer(response?.data?.data?.attributes)
     } catch (error) {
-      console.error('Error fetching user:', error)
+      throw error
     } finally {
       setIsLoading(false)
     }

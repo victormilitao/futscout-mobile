@@ -46,7 +46,7 @@ export default function Login() {
   }
 
   const onError: SubmitErrorHandler<LoginData> = (errors, e) => {
-    console.log(JSON.stringify(errors))
+    console.error(JSON.stringify(errors))
   }
 
   return (

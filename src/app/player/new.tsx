@@ -8,7 +8,7 @@ import { usePlayer } from '@/src/contexts/player'
 import { showError } from '@/src/lib/toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'expo-router'
-import { useForm } from 'react-hook-form'
+import { SubmitErrorHandler, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import zod from 'zod'
 
@@ -16,9 +16,10 @@ export default function NewPlayer() {
   const router = useRouter()
   const { isLoading, player, savePlayer } = usePlayer()
   const newPlayerValidation = zod.object({
-    name: zod.string(),
-    nick: zod.string(),
+    name: zod.string().min(1, 'Campo obrigatório'),
+    nick: zod.string().min(1, 'Campo obrigatório'),
     birth_date: zod.date().optional(),
+    user_id: zod.number().optional()
   })
   type PlayerData = zod.infer<typeof newPlayerValidation>
   const {
@@ -31,19 +32,25 @@ export default function NewPlayer() {
       name: '',
       nick: '',
       birth_date: undefined,
+      user_id: 0
     },
     mode: 'onSubmit',
   })
 
   const handleSave = async (data: PlayerData) => {
-    console.log('data', data)
     try {
       await savePlayer(data)
       router.navigate('/(tabs)')
     } catch (error) {
-      console.error(error)
-      showError('Erro ao salvar jogador')
+      console.log('error1: ', error)
+      console.error(JSON.stringify(errors))
+      const errorMsg = error?.response?.data?.errors[0]
+      showError(errorMsg, 'Erro ao salvar jogador')
     }
+  }
+
+  const onError: SubmitErrorHandler<PlayerData> = (errors, e) => {
+    console.error('errorrr:', errors)
   }
 
   return (
@@ -64,6 +71,7 @@ export default function NewPlayer() {
             name='nick'
             wrapStyle={{ flex: 2 }}
             label='Como prefere ser chamado'
+            error={errors.name?.message}
           />
           <Input
             control={control}
@@ -73,7 +81,7 @@ export default function NewPlayer() {
           />
         </ThemedView>
         <Space />
-        <Button onPress={handleSubmit(handleSave)} isLoading={isLoading}>
+        <Button onPress={handleSubmit(handleSave, onError)} isLoading={isLoading}>
           Próximo passo
         </Button>
       </View>
