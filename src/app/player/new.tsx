@@ -5,6 +5,7 @@ import { ThemedView } from '@/src/components/ThemedView'
 import Input from '@/src/components/form/Input'
 import Space from '@/src/components/space'
 import { usePlayer } from '@/src/contexts/player'
+import { handleError } from '@/src/lib/error-handler'
 import { showError } from '@/src/lib/toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'expo-router'
@@ -42,10 +43,11 @@ export default function NewPlayer() {
       await savePlayer(data)
       router.navigate('/(tabs)')
     } catch (error) {
-      console.log('error1: ', error)
-      console.error(JSON.stringify(errors))
-      const errorMsg = error?.response?.data?.errors[0]
-      showError(errorMsg, 'Erro ao salvar jogador')
+      const errorHandled = handleError(error)
+      if (errorHandled) {
+        const errorMsg = errorHandled.response?.data?.errors[0] || undefined
+        showError(errorMsg, 'Erro ao salvar jogador')
+      }
     }
   }
 

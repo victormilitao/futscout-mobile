@@ -5,11 +5,13 @@ import { PageView } from '@/src/components/PageView'
 import Link from '@/src/components/navigation/Link'
 import { ThemedText } from '@/src/components/ThemedText'
 import Space from '@/src/components/space'
+import { usePlayer } from '@/src/contexts/player'
 
 export default function Menu() {
   const router = useRouter()
+  const {player} = usePlayer()
   const MENU: { key: string; href: Href }[] = [
-    { key: 'Adicionar jogador', href: '/player/new' },
+    { key: player ? 'Editar jogador' : 'Adicionar jogador', href: '/player/new' },
     { key: 'Adicionar time', href: '/(tabs)' },
   ]
   return (
