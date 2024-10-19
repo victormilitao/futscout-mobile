@@ -13,6 +13,7 @@ import { useThemeColor } from '@/src/hooks/useThemeColor'
 type DateTimePickerAllProps = AndroidNativeProps | IOSNativeProps
 
 type Props<T extends FieldValues> = DateTimePickerAllProps & {
+  value?: Date
   control?: Control<T>
   name: Path<T>
   error?: string
@@ -50,7 +51,7 @@ export default function DatePicker<T extends FieldValues>({
       control={control}
       name={name}
       render={({ field: { onChange, value } }) => {
-        const setDate = (event, selectedDate) => {
+        const setSelectedDate = (event, selectedDate) => {
           onChange(handleDate(event, selectedDate))
         }
         return (
@@ -61,14 +62,14 @@ export default function DatePicker<T extends FieldValues>({
               )}
               <View style={styles.content}>
                 <Icon name='calendar' color={brandingPrimary} />
-                <ThemedText>{date.toLocaleDateString('pt-BR')}</ThemedText>
+                <ThemedText>{value?.toLocaleDateString('pt-BR')}</ThemedText>
               </View>
             </TouchableOpacity>
             {show && (
               <DateTimePicker
-                value={date}
+                value={value || new Date()}
                 mode='date'
-                onChange={setDate}
+                onChange={setSelectedDate}
                 display='inline'
               />
             )}

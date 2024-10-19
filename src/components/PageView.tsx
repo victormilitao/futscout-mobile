@@ -1,6 +1,12 @@
 import { Colors } from '@/src/constants/Colors'
 import { PropsWithChildren } from 'react'
-import { SafeAreaView, StyleSheet, View, useColorScheme } from 'react-native'
+import {
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  View,
+  useColorScheme,
+} from 'react-native'
 
 export function PageView({ children }: PropsWithChildren) {
   const colorScheme = useColorScheme() ?? 'light'
@@ -11,7 +17,12 @@ export function PageView({ children }: PropsWithChildren) {
         { backgroundColor: Colors[colorScheme]?.background },
       ]}
     >
-      <View style={styles.container}>{children}</View>
+      <ScrollView
+        contentContainerStyle={styles.scrollView}
+        automaticallyAdjustKeyboardInsets={true}
+      >
+        <View style={styles.container}>{children}</View>
+      </ScrollView>
     </SafeAreaView>
   )
 }
@@ -23,5 +34,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  scrollView: {
+    flexGrow: 1,
   },
 })

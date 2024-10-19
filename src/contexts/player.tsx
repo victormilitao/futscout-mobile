@@ -8,7 +8,7 @@ interface Player {
   nick: string
   user_id?: number
   leg?: string
-  birth_date?: Date
+  birth_date?: string
   modality?: string
 }
 
