@@ -12,15 +12,20 @@ import { useRouter } from 'expo-router'
 import { SubmitErrorHandler, useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import zod from 'zod'
+import DateTimePicker from '@react-native-community/datetimepicker'
+import { useEffect, useState } from 'react'
+import DatePicker from '@/src/components/form/date-time-picker'
 
 export default function NewPlayer() {
   const router = useRouter()
-  const { isLoading, player, savePlayer } = usePlayer()
+  const { isLoading, player, savePlayer, getPlayer } = usePlayer()
+  const [showDatePicker, setShowDatePicker] = useState<boolean>(false)
+
   const newPlayerValidation = zod.object({
     name: zod.string().min(1, 'Campo obrigatório'),
     nick: zod.string().min(1, 'Campo obrigatório'),
     birth_date: zod.date().optional(),
-    user_id: zod.number().optional()
+    user_id: zod.number().optional(),
   })
   type PlayerData = zod.infer<typeof newPlayerValidation>
   const {
@@ -32,11 +37,15 @@ export default function NewPlayer() {
     defaultValues: {
       name: '',
       nick: '',
-      birth_date: undefined,
-      user_id: 0
+      birth_date: new Date(),
+      user_id: 0,
     },
     mode: 'onSubmit',
   })
+
+  useEffect(() => {
+    getPlayer()
+  },[])
 
   const handleSave = async (data: PlayerData) => {
     try {
@@ -75,15 +84,20 @@ export default function NewPlayer() {
             label='Como prefere ser chamado'
             error={errors.name?.message}
           />
-          <Input
-            control={control}
-            name='birth_date'
-            wrapStyle={{ flex: 1 }}
-            label='Nascimento'
-          />
         </ThemedView>
+
+        <DatePicker
+          name='birth_date'
+          label='Nascimento'
+          control={control}
+          value={new Date()}
+        />
+
         <Space />
-        <Button onPress={handleSubmit(handleSave, onError)} isLoading={isLoading}>
+        <Button
+          onPress={handleSubmit(handleSave, onError)}
+          isLoading={isLoading}
+        >
           Próximo passo
         </Button>
       </View>

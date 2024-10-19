@@ -19,8 +19,7 @@ export default function Home() {
     signOut()
     router.navigate('/login')
   }
-  
-  console.log('playerrr', player)
+
   if (isLoading) return <ActivityIndicator ></ActivityIndicator>
 
   if (!player) return <Redirect href={'/player/new'} />
