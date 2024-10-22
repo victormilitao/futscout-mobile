@@ -16,8 +16,3 @@ export const handleError = (error: unknown): ErrorType => {
   console.error('log error: ', error)
   return null
 }
-
-// const checkType = (error: unknown): AxiosError => {
-//   const errorHandled = handleError(error)
-//   if (errorHandled) return errorHandled as AxiosError
-// }
