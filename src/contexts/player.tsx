@@ -2,6 +2,8 @@ import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import api from '../lib/api'
 import { Response, ResponseArray } from '../interfaces/response'
 import { AxiosError } from 'axios'
+import { asyncStorage } from '../lib/storage'
+import { PLAYER_KEY } from '../constants/storage-keys'
 
 interface Player {
   id?: number
@@ -33,12 +35,26 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
   const [player, setPlayer] = useState<Player | null>(null)
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
 
+  const _setPlayer = (player: Player) => {
+    setPlayer(player)
+    asyncStorage.setItem(PLAYER_KEY, JSON.stringify(player))
+  }
+
   const getPlayer = async () => {
+    if (player) return
     setIsLoading(true)
+    const playerStorage = await asyncStorage.getItem(PLAYER_KEY)
+    if (playerStorage) {
+      setPlayer(JSON.parse(playerStorage))
+      setIsLoading(false)
+      return
+    }
+
     try {
       const response = await api.get<ResponseArray<Player>>('/players')
       console.log('get player: ', response?.data?.data[0])
-      setPlayer(response?.data?.data[0]?.attributes)
+      const attributes = response?.data?.data[0]?.attributes
+      _setPlayer(attributes)
     } catch (error) {
       throw error
     } finally {
@@ -51,7 +67,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     try {
       const response = await api.post<Response<Player>>('/players', data)
       console.log('response player save: ', response)
-      setPlayer(response?.data?.data?.attributes)
+      _setPlayer(response?.data?.data?.attributes)
     } catch (error) {
       throw error
     } finally {
@@ -64,7 +80,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     try {
       const response = await api.put<Response<Player>>(`/players/${2}`, data)
       console.log('response player edit: ', response)
-      setPlayer(response?.data?.data?.attributes)
+      _setPlayer(response?.data?.data?.attributes)
     } catch (error) {
       throw error
     } finally {

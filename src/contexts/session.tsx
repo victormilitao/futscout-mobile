@@ -10,6 +10,7 @@ import {
 import { storage } from '../lib/storage'
 import { Response } from '../interfaces/response'
 import { HttpStatusCode } from 'axios'
+import { SESSION_STORAGE, TOKEN_STORAGE } from '../constants/storage-keys'
 
 interface LoginRequest {
   email: string
@@ -28,9 +29,6 @@ interface SessionContextType {
   login: (data: LoginRequest) => void
   signOut: () => void
 }
-
-const SESSION_STORAGE = 'authData'
-const TOKEN_STORAGE = 'token'
 
 export const SessionContext = createContext<SessionContextType>({
   authData: null,
