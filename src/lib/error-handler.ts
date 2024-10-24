@@ -9,7 +9,7 @@ interface ValidationError {
 export const handleError = (error: unknown): ErrorType => {
   if (axios.isAxiosError<ValidationError, Record<string, unknown>>(error)) {
     console.log(error.status)
-    console.error(error.response)
+    console.log('handle error: ', error.response)
     return { status: error?.status, response: error?.response } as AxiosError
   }
 

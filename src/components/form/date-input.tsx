@@ -1,8 +1,6 @@
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
-import { TextInput, View, Text, StyleSheet } from 'react-native'
-import { useState } from 'react'
-import { isValid, parse } from 'date-fns'
 import Input from './Input'
+import { formatDateOnInput } from '@/src/lib/date'
 
 interface DateInputProps<T extends FieldValues> {
   control: Control<T>
@@ -17,28 +15,9 @@ const DateInput = <T extends FieldValues>({
   control,
   name,
   label,
-  placeholder = 'dd/mm/aaaa',
+  placeholder,
   error,
 }: DateInputProps<T>) => {
-  const [date, setDate] = useState<string>('')
-
-  const formatDate = (text: string) => {
-    const numbers = text.replace(/\D/g, '')
-
-    if (numbers.length >= 2) {
-      const day = numbers.slice(0, 2)
-      const month = numbers.slice(2, 4)
-      const year = numbers.slice(4, 8)
-
-      const formattedDate = `${day}${month.length ? '/' : ''}${month}${
-        year.length ? '/' : ''
-      }${year}`
-
-      return formattedDate
-    }
-    return numbers
-  }
-
   return (
     <Controller
       control={control}
@@ -50,7 +29,7 @@ const DateInput = <T extends FieldValues>({
           label={label}
           placeholder={placeholder || 'dd/mm/aaaa'}
           keyboardType='numeric'
-          onChangeText={(text) => onChange(formatDate(text))}
+          onChangeText={(text) => onChange(formatDateOnInput(text))}
           error={error}
         />
       )}

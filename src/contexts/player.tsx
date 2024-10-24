@@ -4,6 +4,7 @@ import { Response, ResponseArray } from '../interfaces/response'
 import { AxiosError } from 'axios'
 
 interface Player {
+  id?: number
   name: string
   nick: string
   user_id?: number
@@ -17,13 +18,15 @@ interface PlayerContextType {
   isLoading: boolean | undefined
   getPlayer: () => void
   savePlayer: (data: Player) => void
+  editPlayer: (data: Player) => void
 }
 
 export const PlayerContext = createContext<PlayerContextType>({
   player: null,
   isLoading: false,
   getPlayer: () => {},
-  savePlayer: (data: Player) => {},
+  savePlayer: () => {},
+  editPlayer: () => {},
 })
 
 export default function PlayerProvider({ children }: PropsWithChildren) {
@@ -34,7 +37,7 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     setIsLoading(true)
     try {
       const response = await api.get<ResponseArray<Player>>('/players')
-      console.log('get player: ', response?.data?.data[0]?.attributes)
+      console.log('get player: ', response?.data?.data[0])
       setPlayer(response?.data?.data[0]?.attributes)
     } catch (error) {
       throw error
@@ -56,9 +59,22 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
     }
   }
 
+  const editPlayer = async (data: Player) => {
+    setIsLoading(true)
+    try {
+      const response = await api.put<Response<Player>>(`/players/${2}`, data)
+      console.log('response player edit: ', response)
+      setPlayer(response?.data?.data?.attributes)
+    } catch (error) {
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <PlayerContext.Provider
-      value={{ player, isLoading, getPlayer, savePlayer }}
+      value={{ player, isLoading, getPlayer, savePlayer, editPlayer }}
     >
       {children}
     </PlayerContext.Provider>

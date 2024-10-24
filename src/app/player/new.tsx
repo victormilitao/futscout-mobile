@@ -18,7 +18,7 @@ import { useRouter } from 'expo-router'
 
 export default function NewPlayer() {
   const router = useRouter()
-  const { isLoading, player, savePlayer, getPlayer } = usePlayer()
+  const { isLoading, player, savePlayer, getPlayer, editPlayer } = usePlayer()
   const a = (val) => {
     return isValid(parse(val, 'dd/MM/yyyy', new Date()))
   }
@@ -37,7 +37,6 @@ export default function NewPlayer() {
     control,
     handleSubmit,
     formState: { errors },
-    setError,
     setValue,
   } = useForm<PlayerData>({
     resolver: zodResolver(newPlayerValidation),
@@ -62,15 +61,17 @@ export default function NewPlayer() {
 
   const handleSave = async (data: PlayerData) => {
     console.log(data)
+    const saveOrEdit = player ? editPlayer : savePlayer
     try {
-      await savePlayer(data)
+      await saveOrEdit(data)
       router.navigate('/(tabs)')
     } catch (error) {
       const errorHandled = handleError(error)
-      if (errorHandled) {
-        const errorMsg = errorHandled.response?.data?.errors[0] || undefined
+      if (!errorHandled) return
+
+      errorHandled.response?.data?.errors?.forEach((errorMsg) => {
         showError(errorMsg, 'Erro ao salvar jogador')
-      }
+      })
     }
   }
 

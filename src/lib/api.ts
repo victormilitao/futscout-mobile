@@ -30,7 +30,7 @@ api.interceptors.response.use(
     }
 
     if (error.request) {
-      console.error('Nenhuma resposta recebida da API', error.request)
+      console.log('Nenhuma resposta recebida da API', error.request)
     }
 
     return Promise.reject(error)
