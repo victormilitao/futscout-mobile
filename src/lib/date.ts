@@ -1,5 +1,11 @@
-export const formatDateOnInput = (text: string) => {
-  const numbers = text.replace(/\D/g, '')
+import {isValid, parse} from 'date-fns'
+
+export const isDateValid = (value: string): boolean => {
+  return isValid(parse(value, 'dd/MM/yyyy', new Date()))
+}
+
+export const formatDateOnInput = (value: string) => {
+  const numbers = value.replace(/\D/g, '')
 
   if (numbers.length >= 2) {
     const day = numbers.slice(0, 2)

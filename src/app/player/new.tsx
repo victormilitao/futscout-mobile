@@ -10,25 +10,20 @@ import { SubmitErrorHandler, useForm } from 'react-hook-form'
 import { ScrollView, StyleSheet, View } from 'react-native'
 import zod from 'zod'
 import { useEffect } from 'react'
-import { parse, isValid } from 'date-fns'
 import DateInput from '@/src/components/form/date-input'
 import { handleError } from '@/src/lib/error-handler'
 import { showError } from '@/src/lib/toast'
 import { useRouter } from 'expo-router'
+import { Messages } from '@/src/constants/messages'
+import { isDateValid } from '@/src/lib/date'
 
 export default function NewPlayer() {
   const router = useRouter()
   const { isLoading, player, savePlayer, getPlayer, editPlayer } = usePlayer()
-  const a = (val) => {
-    return isValid(parse(val, 'dd/MM/yyyy', new Date()))
-  }
-  const m = {
-    message: 'Data inválida. Use o formato dd/mm/yyyy.',
-  }
   const newPlayerValidation = zod.object({
     name: zod.string().min(1, 'Campo obrigatório'),
     nick: zod.string().min(1, 'Campo obrigatório'),
-    birth_date: zod.string().refine(a, m).optional(),
+    birth_date: zod.string().refine(isDateValid, Messages.date).optional(),
     user_id: zod.number().optional(),
   })
   type PlayerData = zod.infer<typeof newPlayerValidation>
