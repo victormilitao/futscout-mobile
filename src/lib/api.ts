@@ -1,8 +1,13 @@
 import axios from 'axios'
 import { storage } from './storage'
 
+const baseUrl = {
+  prod: 'https://futscount.onrender.com/',
+  dev: 'http://localhost:3000/'
+}
+
 const api = axios.create({
-  baseURL: 'http://localhost:3000/',
+  baseURL: baseUrl.prod,
   headers: { 'Content-Type': 'application/json' },
   timeout: 10000,
 })
@@ -25,7 +30,7 @@ api.interceptors.response.use(
     }
 
     if (error.request) {
-      console.error('Nenhuma resposta recebida da API', error.request)
+      console.log('Nenhuma resposta recebida da API', error.request)
     }
 
     return Promise.reject(error)
@@ -37,8 +42,6 @@ api.interceptors.request.use(
     if (!token) token = await storage.getItem('token')
     if (token) config.headers.Authorization = `Bearer ${token}`
 
-    console.log('token: ', token)
-    console.log('headers: ', config.headers)
     return config
   },
   function (error) {

@@ -13,7 +13,7 @@ type Props = {
   isLoading?: boolean
 } & PropsWithChildren<TouchableOpacityProps>
 
-export default function Button({ children, isLoading = true, ...rest }: Props) {
+export default function Button({ children, isLoading = false, ...rest }: Props) {
   const disabled = useThemeColor({},'disabled')
   const brandingPrimary = useThemeColor({},'brandingPrimary')
   const textColor = useThemeColor({}, 'white')

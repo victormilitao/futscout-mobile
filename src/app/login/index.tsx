@@ -36,7 +36,6 @@ export default function Login() {
   })
 
   const handleLogin = async (data: LoginData) => {
-    console.log(data)
     try {
       await login(data)
       router.navigate('/(tabs)')
@@ -47,7 +46,7 @@ export default function Login() {
   }
 
   const onError: SubmitErrorHandler<LoginData> = (errors, e) => {
-    console.log(JSON.stringify(errors))
+    console.error(JSON.stringify(errors))
   }
 
   return (
@@ -73,7 +72,6 @@ export default function Login() {
           label='Email'
           placeholder='Email'
           keyboardType='email-address'
-          autoCapitalize='none'
           error={errors.email?.message}
         />
 
@@ -84,7 +82,6 @@ export default function Login() {
           label='Senha'
           placeholder='Senha'
           secureTextEntry
-          autoCapitalize='none'
           error={errors.password?.message}
         />
 

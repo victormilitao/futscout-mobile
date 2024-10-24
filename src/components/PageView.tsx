@@ -2,7 +2,9 @@ import { Colors } from '@/src/constants/Colors'
 import { PropsWithChildren } from 'react'
 import { SafeAreaView, StyleSheet, View, useColorScheme } from 'react-native'
 
-export function PageView({ children }: PropsWithChildren) {
+type Props = PropsWithChildren
+
+export function PageView({ children }: Props) {
   const colorScheme = useColorScheme() ?? 'light'
   return (
     <SafeAreaView
@@ -23,5 +25,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  scrollView: {
+    flexGrow: 1,
   },
 })
