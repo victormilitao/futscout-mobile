@@ -1,23 +1,15 @@
+import Button from '@/src/components/Button'
 import Select from '@/src/components/form/select'
 import { PageView } from '@/src/components/PageView'
 import { ThemedText } from '@/src/components/ThemedText'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import zod from 'zod'
 
 export default function NewTeam() {
   const newTeamValidation = zod.object({
-    name: zod.string().min(1, 'Campo obrigatório'),
+    name: zod.any(),
   })
   type TeamData = zod.infer<typeof newTeamValidation>
 
@@ -29,41 +21,48 @@ export default function NewTeam() {
   } = useForm<TeamData>({
     resolver: zodResolver(newTeamValidation),
     defaultValues: {
-      name: '',
+      name: {},
     },
     mode: 'onSubmit',
   })
 
-  return <Select control={control} name='name' label='' />
+  const options = [
+    { id: 1, text: 'Fortaleza' },
+    { id: 2, text: 'Sao Paulo' },
+    { id: 3, text: 'Recife' },
+  ]
+
+  const handleSave = async (data) => {
+    console.log(data)
+  }
+
+  return (
+    <PageView>
+      {/* <ScrollView automaticallyAdjustKeyboardInsets> */}
+      <ThemedText type='subtitle' style={styles.title}>
+        Adicione um time
+      </ThemedText>
+      <View style={styles.form}>
+        <Select
+          control={control}
+          name='name'
+          label=''
+          placeholder='Selecione uma cidade...'
+          options={options}
+        />
+        <Button onPress={handleSubmit(handleSave)}>Salvar</Button>
+      </View>
+      {/* </ScrollView> */}
+    </PageView>
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
+  title: {
+    textAlign: 'center',
+    marginBottom: 10,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
-  },
-  list: {
-    position: 'absolute',
-    top: 50, // ajusta conforme a posição do input
-    left: 20,
-    right: 20,
-    backgroundColor: '#fff',
-    zIndex: 10,
-    maxHeight: 150,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-  },
-  option: {
-    padding: 10,
-  },
-  contentBelow: {
-    marginTop: 100, // ajuste conforme o layout
+  form: {
+    gap: 8,
   },
 })

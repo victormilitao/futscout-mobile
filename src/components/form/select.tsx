@@ -4,6 +4,11 @@ import { ThemedText } from '../ThemedText'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { useState } from 'react'
 
+interface Option {
+  id: number
+  text: string
+}
+
 interface Props<T extends FieldValues> {
   control: Control<T>
   name: Path<T>
@@ -11,6 +16,7 @@ interface Props<T extends FieldValues> {
   placeholder?: string
   error?: string
   defaultValue?: string
+  options: Option[]
 }
 
 const Select = <T extends FieldValues>({
@@ -19,29 +25,35 @@ const Select = <T extends FieldValues>({
   label,
   placeholder,
   error,
-}: Props<T>) => {
+  options,
+}: Props<T>): JSX.Element => {
   const [query, setQuery] = useState<string>('')
-  const [filteredOptions, setFilteredOptions] = useState<string[]>([])
+  const [filteredOptions, setFilteredOptions] = useState<Option[]>([])
   const [showOptions, setShowOptions] = useState(false)
-
-  const allOptions = ['Fortaleza', 'Sao Paulo', 'Recife']
+  const [selectedOption, setSelectedOption] = useState<Option | null>(null)
 
   const handleSearch = (text: string) => {
     setQuery(text)
-    if (text.length > 0) {
-      setFilteredOptions(
-        allOptions.filter((option) =>
-          option.toLowerCase().includes(text.toLowerCase())
-        )
-      )
-      setShowOptions(true)
-    } else {
-      setShowOptions(false)
+    setShowOptions(false)
+    if (text.length <= 0) {
+      setFilteredOptions([])
+      return
     }
+
+    const _filteredOptions = options.filter((option) =>
+      option.text.toLowerCase().includes(text.toLowerCase())
+    )
+    if (_filteredOptions?.length > 0) {
+      setFilteredOptions(_filteredOptions)
+      setShowOptions(true)
+      return
+    }
+    
   }
 
-  const handleSelect = (option: string) => {
-    setQuery(option)
+  const handleSelect = (option: Option) => {
+    setQuery(option.text)
+    setSelectedOption(option)
     setShowOptions(false)
   }
 
@@ -50,15 +62,21 @@ const Select = <T extends FieldValues>({
       <Controller
         control={control}
         name={name}
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { onChange } }) => (
           <Input
             control={control}
             name={name}
             label={label}
             placeholder={placeholder || 'Pesquisar...'}
-            style={styles.input}
             value={query}
-            onChangeText={(text) => onChange(handleSearch(text))}
+            onChange={() => {
+              console.log(selectedOption)
+              selectedOption}}
+            onChangeText={(text) => {
+              console.log('2: ' , selectedOption)
+              handleSearch(text)
+              onChange(selectedOption)
+            }}
             error={error}
           />
         )}
@@ -68,10 +86,10 @@ const Select = <T extends FieldValues>({
         <FlatList
           style={styles.list}
           data={filteredOptions}
-          keyExtractor={(item) => item}
+          keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity onPress={() => handleSelect(item)}>
-              <ThemedText style={styles.option}>{item}</ThemedText>
+              <ThemedText style={styles.option}>{item.text}</ThemedText>
             </TouchableOpacity>
           )}
         />
@@ -79,38 +97,34 @@ const Select = <T extends FieldValues>({
       <View style={styles.contentBelow}>
         <ThemedText>Conteúdo abaixo do select</ThemedText>
       </View>
+      <ThemedText>{selectedOption?.text}</ThemedText>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 20,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    padding: 10,
-    borderRadius: 5,
+    
   },
   list: {
     position: 'absolute',
-    top: 50, // ajusta conforme a posição do input
-    left: 20,
-    right: 20,
+    top: 47,
+    width: '100%',
     backgroundColor: '#fff',
-    zIndex: 10,
+    zIndex: 10000,
     maxHeight: 150,
     borderColor: '#ccc',
     borderWidth: 1,
-    borderRadius: 5,
+    borderBottomLeftRadius: 5,
+    borderBottomEndRadius: 5,
+    overflow: 'hidden'
   },
   option: {
     padding: 10,
   },
   contentBelow: {
-    marginTop: 100, // ajuste conforme o layout
+    flex: 1,
+    marginTop: 30,
   },
 })
 
