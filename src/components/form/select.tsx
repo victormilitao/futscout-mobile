@@ -4,7 +4,7 @@ import { ThemedText } from '../ThemedText'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
 import { useState } from 'react'
 
-interface Option {
+export interface Option {
   id: number
   text: string
 }
@@ -35,7 +35,8 @@ const Select = <T extends FieldValues>({
   const handleSearch = (text: string) => {
     setQuery(text)
     setShowOptions(false)
-    if (text.length <= 0) {
+    console.log('options: ', options)
+    if (text.length <= 0 || !options) {
       setFilteredOptions([])
       return
     }
@@ -48,7 +49,6 @@ const Select = <T extends FieldValues>({
       setShowOptions(true)
       return
     }
-    
   }
 
   const handleSelect = (option: Option) => {
@@ -63,37 +63,41 @@ const Select = <T extends FieldValues>({
         control={control}
         name={name}
         render={({ field: { onChange } }) => (
-          <Input
-            control={control}
-            name={name}
-            label={label}
-            placeholder={placeholder || 'Pesquisar...'}
-            value={query}
-            onChange={() => {
-              console.log(selectedOption)
-              selectedOption}}
-            onChangeText={(text) => {
-              console.log('2: ' , selectedOption)
-              handleSearch(text)
-              onChange(selectedOption)
-            }}
-            error={error}
-          />
+          <View>
+            <Input
+              control={control}
+              name={name}
+              label={label}
+              placeholder={placeholder || 'Pesquisar...'}
+              value={query}
+              onChangeText={(text) => {
+                handleSearch(text)
+                onChange(text)
+              }}
+              error={error}
+            />
+
+            {showOptions && (
+              <FlatList
+                style={styles.list}
+                data={filteredOptions}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    onPress={() => {
+                      handleSelect(item)
+                      // onChange(item.text)
+                    }}
+                  >
+                    <ThemedText style={styles.option}>{item.text}</ThemedText>
+                  </TouchableOpacity>
+                )}
+              />
+            )}
+          </View>
         )}
       />
 
-      {showOptions && (
-        <FlatList
-          style={styles.list}
-          data={filteredOptions}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSelect(item)}>
-              <ThemedText style={styles.option}>{item.text}</ThemedText>
-            </TouchableOpacity>
-          )}
-        />
-      )}
       <View style={styles.contentBelow}>
         <ThemedText>Conteúdo abaixo do select</ThemedText>
       </View>
@@ -103,9 +107,7 @@ const Select = <T extends FieldValues>({
 }
 
 const styles = StyleSheet.create({
-  container: {
-    
-  },
+  container: {},
   list: {
     position: 'absolute',
     top: 47,
@@ -117,7 +119,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderBottomLeftRadius: 5,
     borderBottomEndRadius: 5,
-    overflow: 'hidden'
+    overflow: 'hidden',
   },
   option: {
     padding: 10,

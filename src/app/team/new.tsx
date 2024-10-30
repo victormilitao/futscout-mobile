@@ -1,15 +1,19 @@
 import Button from '@/src/components/Button'
-import Select from '@/src/components/form/select'
+import Select, { Option } from '@/src/components/form/select'
 import { PageView } from '@/src/components/PageView'
 import { ThemedText } from '@/src/components/ThemedText'
+import { useCity } from '@/src/contexts/city'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { StyleSheet, View } from 'react-native'
 import zod from 'zod'
 
 export default function NewTeam() {
+  const { cities, searchCity } = useCity()
+  const [options, setOptions] = useState<Option[]>([])
   const newTeamValidation = zod.object({
-    name: zod.any(),
+    city: zod.any(),
   })
   type TeamData = zod.infer<typeof newTeamValidation>
 
@@ -17,20 +21,30 @@ export default function NewTeam() {
     control,
     handleSubmit,
     formState: { errors },
-    setValue,
+    watch,
   } = useForm<TeamData>({
     resolver: zodResolver(newTeamValidation),
     defaultValues: {
-      name: {},
+      city: '',
     },
     mode: 'onSubmit',
   })
 
-  const options = [
-    { id: 1, text: 'Fortaleza' },
-    { id: 2, text: 'Sao Paulo' },
-    { id: 3, text: 'Recife' },
-  ]
+  const citySearch = watch('city')
+  useEffect(() => {
+    console.log('citySearch: ', citySearch)
+    if (citySearch) searchCity(citySearch)
+  }, [citySearch])
+
+  useEffect(() => {
+    console.log('cities: ', cities)
+    if (!cities) return
+    const newOptions: Option[] = cities?.map((city) => ({
+      id: city?.id,
+      text: city.name,
+    }))
+    setOptions(newOptions)
+  }, [cities])
 
   const handleSave = async (data) => {
     console.log(data)
@@ -41,11 +55,12 @@ export default function NewTeam() {
       {/* <ScrollView automaticallyAdjustKeyboardInsets> */}
       <ThemedText type='subtitle' style={styles.title}>
         Adicione um time
+        {options.length}
       </ThemedText>
       <View style={styles.form}>
         <Select
           control={control}
-          name='name'
+          name='city'
           label=''
           placeholder='Selecione uma cidade...'
           options={options}
