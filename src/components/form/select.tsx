@@ -2,7 +2,7 @@ import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
 import Input from './Input'
 import { ThemedText } from '../ThemedText'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export interface Option {
   id: number
@@ -17,6 +17,7 @@ interface Props<T extends FieldValues> {
   error?: string
   defaultValue?: string
   options: Option[]
+  handleOption: (option: Option | null) => void
 }
 
 const Select = <T extends FieldValues>({
@@ -26,35 +27,44 @@ const Select = <T extends FieldValues>({
   placeholder,
   error,
   options,
+  handleOption
 }: Props<T>): JSX.Element => {
   const [query, setQuery] = useState<string>('')
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([])
+  const [selectedOption, setSelectedOption] = useState<Option | null>()
   const [showOptions, setShowOptions] = useState(false)
-  const [selectedOption, setSelectedOption] = useState<Option | null>(null)
 
   const handleSearch = (text: string) => {
     setQuery(text)
+    setSelectedOption(null)
+    handleOption(null)
+  }
+
+  useEffect(() => {
     setShowOptions(false)
-    console.log('options: ', options)
-    if (text.length <= 0 || !options) {
+    console.log('query: ',query)
+    if (query.length <= 0 || options?.length <= 0) {
       setFilteredOptions([])
       return
     }
 
     const _filteredOptions = options.filter((option) =>
-      option.text.toLowerCase().includes(text.toLowerCase())
+      option.text.toLowerCase().includes(query.toLowerCase())
     )
-    if (_filteredOptions?.length > 0) {
+    console.log('_filteredOptions: ',_filteredOptions)
+
+    if (_filteredOptions?.length > 0 && !selectedOption) {
       setFilteredOptions(_filteredOptions)
       setShowOptions(true)
       return
     }
-  }
+  }, [options, query])
 
   const handleSelect = (option: Option) => {
     setQuery(option.text)
-    setSelectedOption(option)
     setShowOptions(false)
+    setSelectedOption(option)
+    handleOption(option)
   }
 
   return (
@@ -86,7 +96,6 @@ const Select = <T extends FieldValues>({
                   <TouchableOpacity
                     onPress={() => {
                       handleSelect(item)
-                      // onChange(item.text)
                     }}
                   >
                     <ThemedText style={styles.option}>{item.text}</ThemedText>
@@ -97,11 +106,6 @@ const Select = <T extends FieldValues>({
           </View>
         )}
       />
-
-      <View style={styles.contentBelow}>
-        <ThemedText>Conteúdo abaixo do select</ThemedText>
-      </View>
-      <ThemedText>{selectedOption?.text}</ThemedText>
     </View>
   )
 }
@@ -110,7 +114,7 @@ const styles = StyleSheet.create({
   container: {},
   list: {
     position: 'absolute',
-    top: 47,
+    top: 71,
     width: '100%',
     backgroundColor: '#fff',
     zIndex: 10000,
@@ -123,10 +127,6 @@ const styles = StyleSheet.create({
   },
   option: {
     padding: 10,
-  },
-  contentBelow: {
-    flex: 1,
-    marginTop: 30,
   },
 })
 

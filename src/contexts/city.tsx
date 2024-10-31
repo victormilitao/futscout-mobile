@@ -34,8 +34,6 @@ export default function CityProvider({ children }: PropsWithChildren) {
       const response = await api.get<ResponseArray<City>>('/cities', {
         params: { 'q[name_i_cont]': text },
       })
-      console.log('get cities: ', response?.data?.data)
-      // const attributes = response?.data?.data?
       const attributes = response?.data?.data?.map((data) => data?.attributes)
       setCities(attributes)
     } catch (error) {
