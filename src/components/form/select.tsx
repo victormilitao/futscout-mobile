@@ -111,7 +111,9 @@ const Select = <T extends FieldValues>({
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    zIndex: 10000
+  },
   list: {
     position: 'absolute',
     top: 71,

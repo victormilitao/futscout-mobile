@@ -77,8 +77,12 @@ export default function PlayerProvider({ children }: PropsWithChildren) {
 
   const editPlayer = async (data: Player) => {
     setIsLoading(true)
+    data = { ...data, id: player?.id }
     try {
-      const response = await api.put<Response<Player>>(`/players/${2}`, data)
+      const response = await api.put<Response<Player>>(
+        `/players/${data.id}`,
+        data
+      )
       console.log('response player edit: ', response)
       _setPlayer(response?.data?.data?.attributes)
     } catch (error) {

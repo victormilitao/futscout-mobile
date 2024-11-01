@@ -21,10 +21,10 @@ export default function NewPlayer() {
   const router = useRouter()
   const { isLoading, player, savePlayer, getPlayer, editPlayer } = usePlayer()
   const newPlayerValidation = zod.object({
+    id: zod.number().optional(),
     name: zod.string().min(1, 'Campo obrigatório'),
     nick: zod.string().min(1, 'Campo obrigatório'),
     birth_date: zod.string().refine(isDateValid, Messages.date).optional(),
-    user_id: zod.number().optional(),
   })
   type PlayerData = zod.infer<typeof newPlayerValidation>
 
@@ -39,7 +39,6 @@ export default function NewPlayer() {
       name: player?.name || '',
       nick: player?.nick || '',
       birth_date: player?.birth_date || '',
-      user_id: 0,
     },
     mode: 'onSubmit',
   })
@@ -55,12 +54,12 @@ export default function NewPlayer() {
   }, [player])
 
   const handleSave = async (data: PlayerData) => {
-    console.log(data)
     const saveOrEdit = player ? editPlayer : savePlayer
     try {
       await saveOrEdit(data)
       router.navigate('/(tabs)')
     } catch (error) {
+      console.log('handle save player: ', error)
       const errorHandled = handleError(error)
       if (!errorHandled) return
 

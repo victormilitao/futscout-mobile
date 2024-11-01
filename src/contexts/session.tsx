@@ -7,7 +7,7 @@ import {
   useEffect,
   useState,
 } from 'react'
-import { storage } from '../lib/storage'
+import { asyncStorage, storage } from '../lib/storage'
 import { Response } from '../interfaces/response'
 import { HttpStatusCode } from 'axios'
 import { SESSION_STORAGE, TOKEN_STORAGE } from '../constants/storage-keys'
@@ -87,6 +87,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
     try {
       await storage.removeItem(SESSION_STORAGE)
       await storage.removeItem(TOKEN_STORAGE)
+      if (asyncStorage.clear) await asyncStorage.clear()
       setAuthData(null)
     } catch (error) {
       console.error(error)

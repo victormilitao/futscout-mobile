@@ -1,6 +1,7 @@
 import Button from '@/src/components/Button'
 import Select, { Option } from '@/src/components/form/select'
 import { PageView } from '@/src/components/PageView'
+import Space from '@/src/components/space'
 import { ThemedText } from '@/src/components/ThemedText'
 import { useCity } from '@/src/contexts/city'
 import { useTeam } from '@/src/contexts/team'
@@ -96,8 +97,6 @@ export default function NewTeam() {
       {/* <ScrollView automaticallyAdjustKeyboardInsets> */}
       <ThemedText type='subtitle' style={styles.title}>
         Adicione um time
-        {cityOptions.length}
-        /{teamOptions.length}
       </ThemedText>
       <View style={styles.form}>
         <Select
@@ -118,6 +117,7 @@ export default function NewTeam() {
             handleOption={handleTeamOption}
           />
         )}
+        <Space />
         <Button onPress={handleSubmit(handleSave)}>Salvar</Button>
       </View>
       {/* </ScrollView> */}
