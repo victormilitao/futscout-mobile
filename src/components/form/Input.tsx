@@ -59,5 +59,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     fontFamily: Fonts.default,
     fontSize: 16,
+    height: 50
   },
 })

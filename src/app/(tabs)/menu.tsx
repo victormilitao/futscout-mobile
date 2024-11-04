@@ -13,7 +13,7 @@ export default function Menu() {
       key: player ? 'Editar jogador' : 'Adicionar jogador',
       href: '/player/new',
     },
-    { key: 'Adicionar time', href: '/(tabs)' },
+    { key: 'Adicionar time', href: '/team/new' },
   ]
   return (
     <PageView>
