@@ -1,4 +1,5 @@
-import {isValid, parse} from 'date-fns'
+import { format, isValid, parse, parseISO } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
 export const isDateValid = (value: string): boolean => {
   return isValid(parse(value, 'dd/MM/yyyy', new Date()))
@@ -19,4 +20,10 @@ export const formatDateOnInput = (value: string) => {
     return formattedDate
   }
   return numbers
+}
+
+export const formatToBr = (date): string => {
+  if (!date) return date
+  const dataISO = parseISO(date)
+  return format(dataISO, 'dd/MM/yyyy', { locale: ptBR })
 }

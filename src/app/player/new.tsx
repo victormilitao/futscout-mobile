@@ -15,7 +15,7 @@ import { handleError } from '@/src/lib/error-handler'
 import { showError } from '@/src/lib/toast'
 import { useRouter } from 'expo-router'
 import { Messages } from '@/src/constants/messages'
-import { isDateValid } from '@/src/lib/date'
+import { formatToBr, isDateValid } from '@/src/lib/date'
 
 export default function NewPlayer() {
   const router = useRouter()
@@ -50,7 +50,7 @@ export default function NewPlayer() {
   useEffect(() => {
     setValue('name', player?.name || '')
     setValue('nick', player?.nick || '')
-    setValue('birth_date', player?.birth_date || '')
+    setValue('birth_date', formatToBr(player?.birth_date) || '')
   }, [player])
 
   const handleSave = async (data: PlayerData) => {

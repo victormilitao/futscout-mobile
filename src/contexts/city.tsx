@@ -9,6 +9,7 @@ interface City {
   id: number
   name: string
   capital: boolean
+  acronym: string
 }
 
 interface CityContextType {
@@ -34,7 +35,10 @@ export default function CityProvider({ children }: PropsWithChildren) {
       const response = await api.get<ResponseArray<City>>('/cities', {
         params: { 'q[name_i_cont]': text },
       })
-      const attributes = response?.data?.data?.map((data) => data?.attributes)
+      const attributes = response?.data?.data?.map((data) => {
+        const acronym = data?.relationships?.acronym
+        return { ...data?.attributes, acronym: acronym }
+      })
       setCities(attributes)
     } catch (error) {
       throw error
