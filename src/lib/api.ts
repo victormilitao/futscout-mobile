@@ -27,6 +27,7 @@ api.interceptors.response.use(
       ) {
         console.error('Token expirado ou inválido')
       }
+      return Promise.reject(error)
     }
 
     if (error.request) {

@@ -12,7 +12,7 @@ export default function Home() {
   const router = useRouter()
 
   useEffect(() => {
-    getPlayer()
+    // getPlayer()
   }, [])
 
   const handleSignOut = () => {

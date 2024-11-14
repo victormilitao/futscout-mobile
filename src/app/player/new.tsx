@@ -44,7 +44,7 @@ export default function NewPlayer() {
   })
 
   useEffect(() => {
-    getPlayer()
+    // getPlayer()
   }, [])
 
   useEffect(() => {
