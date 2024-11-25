@@ -19,6 +19,7 @@ interface TeamContextType {
   isLoading: boolean | undefined
   searchByCityId: (cityId: number | null) => void
   saveTeam: (data: PlayerTeam) => void
+  getTeams: () => void
 }
 
 export const TeamContext = createContext<TeamContextType>({
@@ -26,6 +27,7 @@ export const TeamContext = createContext<TeamContextType>({
   isLoading: false,
   searchByCityId: () => {},
   saveTeam: () => {},
+  getTeams: () => {},
 })
 
 export default function TeamProvider({ children }: PropsWithChildren) {
@@ -67,9 +69,27 @@ export default function TeamProvider({ children }: PropsWithChildren) {
     }
   }
 
+  const getTeams = async () => {
+    console.log('get teams1:')
+    setIsLoading(true)
+    try {
+      
+      const response = await api.get<ResponseArray<Team>>('/teams', {})
+      console.log('get teams2:')
+      const attributes = response?.data?.data?.map((data) => data?.attributes)
+      console.log('get teams:', attributes)
+      setTeams(attributes)
+    } catch (error) {
+      console.log(error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <TeamContext.Provider
-      value={{ teams, isLoading, searchByCityId, saveTeam }}
+      value={{ teams, isLoading, searchByCityId, saveTeam, getTeams }}
     >
       {children}
     </TeamContext.Provider>

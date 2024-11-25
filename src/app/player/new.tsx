@@ -57,7 +57,7 @@ export default function NewPlayer() {
     const saveOrEdit = player ? editPlayer : savePlayer
     try {
       await saveOrEdit(data)
-      router.navigate('/(tabs)')
+      router.navigate('/team/new')
     } catch (error) {
       console.log('handle save player: ', error)
       const errorHandled = handleError(error)
