@@ -1,12 +1,15 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react'
 import api from '../lib/api'
-import { Response, ResponseArray } from '../interfaces/response'
-import { AxiosError } from 'axios'
-import { asyncStorage } from '../lib/storage'
-import { PLAYER_KEY } from '../constants/storage-keys'
+import { ResponseArray } from '../interfaces/response'
 
 interface Team {
   id: number
+  name: string
+  city_id: number
+}
+
+interface PlayerTeam {
+  team_id?: number
   name: string
   city_id: number
 }
@@ -15,12 +18,16 @@ interface TeamContextType {
   teams: Team[] | null
   isLoading: boolean | undefined
   searchByCityId: (cityId: number | null) => void
+  saveTeam: (data: PlayerTeam) => void
+  getTeams: () => void
 }
 
 export const TeamContext = createContext<TeamContextType>({
   teams: null,
   isLoading: false,
   searchByCityId: () => {},
+  saveTeam: () => {},
+  getTeams: () => {},
 })
 
 export default function TeamProvider({ children }: PropsWithChildren) {
@@ -47,8 +54,43 @@ export default function TeamProvider({ children }: PropsWithChildren) {
     }
   }
 
+  const saveTeam = async (data: PlayerTeam) => {
+    setIsLoading(true)
+    try {
+      console.log(data)
+      const response = await api.post<ResponseArray<Team>>('/player_teams', {
+        player_teams: data,
+      })
+      console.log(response)
+    } catch (error) {
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const getTeams = async () => {
+    console.log('get teams1:')
+    setIsLoading(true)
+    try {
+      
+      const response = await api.get<ResponseArray<Team>>('/teams', {})
+      console.log('get teams2:')
+      const attributes = response?.data?.data?.map((data) => data?.attributes)
+      console.log('get teams:', attributes)
+      setTeams(attributes)
+    } catch (error) {
+      console.log(error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
-    <TeamContext.Provider value={{ teams, isLoading, searchByCityId }}>
+    <TeamContext.Provider
+      value={{ teams, isLoading, searchByCityId, saveTeam, getTeams }}
+    >
       {children}
     </TeamContext.Provider>
   )

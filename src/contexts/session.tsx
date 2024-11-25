@@ -11,6 +11,7 @@ import { asyncStorage, storage } from '../lib/storage'
 import { Response } from '../interfaces/response'
 import { HttpStatusCode } from 'axios'
 import { SESSION_STORAGE, TOKEN_STORAGE } from '../constants/storage-keys'
+import { setPlayerStorage } from './player'
 
 interface LoginRequest {
   email: string
@@ -52,6 +53,7 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const authDataSerialized = await storage.getItem(SESSION_STORAGE)
       if (authDataSerialized) {
+        console.log('load storage: ', authDataSerialized)
         setAuthData(JSON.parse(authDataSerialized))
       }
     } catch (error) {
@@ -70,9 +72,12 @@ export const SessionProvider: React.FC<{ children: ReactNode }> = ({
       )
       if (response.status === HttpStatusCode.Ok) {
         const authData = response?.data
+        console.log('login: ', authData)
         setAuthData(authData)
         storage.setItem(SESSION_STORAGE, JSON.stringify(authData))
         storage.setItem(TOKEN_STORAGE, (authData as any)?.token)
+        const players = authData?.data?.relationships?.players
+        if (players?.length > 0) setPlayerStorage(players[0])
         return
       }
     } catch (error) {

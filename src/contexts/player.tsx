@@ -1,4 +1,10 @@
-import { PropsWithChildren, createContext, useContext, useState } from 'react'
+import {
+  PropsWithChildren,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import api from '../lib/api'
 import { Response, ResponseArray } from '../interfaces/response'
 import { AxiosError } from 'axios'
@@ -31,13 +37,22 @@ export const PlayerContext = createContext<PlayerContextType>({
   editPlayer: () => {},
 })
 
+export const setPlayerStorage = (player: Player) => {
+  if (!player) return
+  asyncStorage.setItem(PLAYER_KEY, JSON.stringify(player))
+}
+
 export default function PlayerProvider({ children }: PropsWithChildren) {
   const [player, setPlayer] = useState<Player | null>(null)
   const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
 
+  useEffect(() => {
+    getPlayer()
+  }, [])
+
   const _setPlayer = (player: Player) => {
     setPlayer(player)
-    asyncStorage.setItem(PLAYER_KEY, JSON.stringify(player))
+    setPlayerStorage(player)
   }
 
   const getPlayer = async () => {

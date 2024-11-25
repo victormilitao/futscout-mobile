@@ -1,4 +1,4 @@
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native'
+import { FlatList, StyleProp, StyleSheet, TouchableOpacity, View, ViewStyle } from 'react-native'
 import Input from './Input'
 import { ThemedText } from '../ThemedText'
 import { Control, Controller, FieldValues, Path } from 'react-hook-form'
@@ -18,6 +18,7 @@ interface Props<T extends FieldValues> {
   defaultValue?: string
   options: Option[]
   handleOption: (option: Option | null) => void
+  wrapStyle?: StyleProp<ViewStyle>
 }
 
 const Select = <T extends FieldValues>({
@@ -27,7 +28,8 @@ const Select = <T extends FieldValues>({
   placeholder,
   error,
   options,
-  handleOption
+  handleOption,
+  wrapStyle
 }: Props<T>): JSX.Element => {
   const [query, setQuery] = useState<string>('')
   const [filteredOptions, setFilteredOptions] = useState<Option[]>([])
@@ -42,7 +44,6 @@ const Select = <T extends FieldValues>({
 
   useEffect(() => {
     setShowOptions(false)
-    console.log('query: ',query)
     if (query.length <= 0 || options?.length <= 0) {
       setFilteredOptions([])
       return
@@ -51,7 +52,6 @@ const Select = <T extends FieldValues>({
     const _filteredOptions = options.filter((option) =>
       option.text.toLowerCase().includes(query.toLowerCase())
     )
-    console.log('_filteredOptions: ',_filteredOptions)
 
     if (_filteredOptions?.length > 0 && !selectedOption) {
       setFilteredOptions(_filteredOptions)
@@ -68,7 +68,7 @@ const Select = <T extends FieldValues>({
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, wrapStyle]}>
       <Controller
         control={control}
         name={name}
@@ -84,6 +84,7 @@ const Select = <T extends FieldValues>({
                 handleSearch(text)
                 onChange(text)
               }}
+              onBlur={() => setShowOptions(false)}
               error={error}
             />
 
@@ -112,15 +113,16 @@ const Select = <T extends FieldValues>({
 
 const styles = StyleSheet.create({
   container: {
-    zIndex: 10000
+    zIndex: 10,
+    position: 'relative'
   },
   list: {
     position: 'absolute',
     top: 71,
     width: '100%',
     backgroundColor: '#fff',
-    zIndex: 10000,
-    maxHeight: 150,
+    zIndex: 11,
+    maxHeight: 200,
     borderColor: '#ccc',
     borderWidth: 1,
     borderBottomLeftRadius: 5,

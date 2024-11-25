@@ -11,5 +11,6 @@ interface DataResponse<T> {
   id?: number
   type?: string
   attributes: T
+  relationships: any
   [key: string]: any
 }
